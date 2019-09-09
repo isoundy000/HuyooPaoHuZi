@@ -1,0 +1,174 @@
+
+baodai.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/a
+  rotate: false
+  xy: 256, 419
+  size: 60, 61
+  orig: 60, 61
+  offset: 0, 0
+  index: -1
+images/b1
+  rotate: false
+  xy: 2, 340
+  size: 125, 140
+  orig: 125, 140
+  offset: 0, 0
+  index: -1
+images/b2
+  rotate: false
+  xy: 2, 198
+  size: 125, 140
+  orig: 125, 140
+  offset: 0, 0
+  index: -1
+images/b3
+  rotate: false
+  xy: 129, 340
+  size: 125, 140
+  orig: 125, 140
+  offset: 0, 0
+  index: -1
+images/c01
+  rotate: false
+  xy: 129, 208
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c02
+  rotate: false
+  xy: 256, 377
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c03
+  rotate: false
+  xy: 318, 440
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c04
+  rotate: false
+  xy: 54, 4
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c05
+  rotate: false
+  xy: 370, 440
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c06
+  rotate: false
+  xy: 422, 440
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c07
+  rotate: false
+  xy: 256, 335
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c08
+  rotate: false
+  xy: 181, 208
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c09
+  rotate: false
+  xy: 318, 398
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c10
+  rotate: false
+  xy: 370, 398
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c11
+  rotate: false
+  xy: 422, 398
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c12
+  rotate: false
+  xy: 308, 356
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c13
+  rotate: false
+  xy: 360, 356
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c14
+  rotate: false
+  xy: 412, 356
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/c15
+  rotate: false
+  xy: 308, 314
+  size: 50, 40
+  orig: 50, 40
+  offset: 0, 0
+  index: -1
+images/d1
+  rotate: false
+  xy: 2, 46
+  size: 50, 150
+  orig: 50, 150
+  offset: 0, 0
+  index: -1
+images/d2
+  rotate: false
+  xy: 54, 46
+  size: 50, 150
+  orig: 50, 150
+  offset: 0, 0
+  index: -1
+images/e
+  rotate: false
+  xy: 129, 250
+  size: 88, 88
+  orig: 88, 88
+  offset: 0, 0
+  index: -1
+images/k
+  rotate: false
+  xy: 360, 317
+  size: 50, 37
+  orig: 50, 37
+  offset: 0, 0
+  index: -1
+images/o
+  rotate: false
+  xy: 2, 2
+  size: 50, 42
+  orig: 50, 42
+  offset: 0, 0
+  index: -1
