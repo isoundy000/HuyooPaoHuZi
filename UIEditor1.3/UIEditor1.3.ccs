@@ -6053,8 +6053,11 @@
         <Project Name="NewClubPlayWayInfoLayer.csd" Type="Layer" />
         <Project Name="NewClubRecord.csd" Type="Layer" />
         <Project Name="NewClubSetLayer.csd" Type="Layer" />
+        <Project Name="PDKGameRoomEnd.csd" Type="Layer" />
+        <Project Name="PDKPersonInfor.csd" Type="Layer" />
         <Project Name="PHZHallLayer.csd" Type="Layer" />
         <Project Name="StatisticsLayer.csd" Type="Layer" />
+        <Project Name="YZPositionLayer.csd" Type="Layer" />
       </RootFolder>
     </Group>
   </SolutionFolder>

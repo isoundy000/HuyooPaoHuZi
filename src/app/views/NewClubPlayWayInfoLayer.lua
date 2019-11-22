@@ -26,6 +26,7 @@ local NewClubPlayWayInfoLayer = class("NewClubPlayWayInfoLayer", cc.load("mvc").
 
 function NewClubPlayWayInfoLayer:onConfig()
     self.widget             = {
+        {"Button_close", "onClose"},
         {"Text_playwaydes"},
         {"TextField_playway"},
         {"Text_cardType"},
@@ -45,9 +46,10 @@ function NewClubPlayWayInfoLayer:onConfig()
         {"Text_power"},
         {"TextField_powerNum"},
         {"Button_setPower", "onSetPower"},
-        {"Button_cancel", "onCancel"},
+        {"Text_autoDissTitle"},
+        {"Text_autoDissTable"},
+        {"Button_setAutoDiss", "onSetAutoDiss"},
         {"Button_achieve", "onAchieve"},
-        {"Text_statisticsOC"},
         {"Text_winItem"},
         {"Image_bankerMode", "onBankerMode"},
         {"Image_fatigueMode", "onFatigueMode"},
@@ -76,6 +78,11 @@ function NewClubPlayWayInfoLayer:onCreate(param)
 	self.TextField_criticalNum:setTouchEnabled(false)
 	self.TextField_powerNum:setTouchEnabled(false)
 	self:initUI(self.clubData, param[2])
+    self.Image_goldMode:setVisible(false)
+end
+
+function NewClubPlayWayInfoLayer:onClose()
+    self:removeFromParent()
 end
 
 function NewClubPlayWayInfoLayer:onAAType()
@@ -124,17 +131,24 @@ function NewClubPlayWayInfoLayer:onStatistics()
 end
 
 function NewClubPlayWayInfoLayer:onSetCritical()
-	self.TextField_criticalNum:setTouchEnabled(true)
-    self.TextField_criticalNum:attachWithIME()
+    local node = require("app.MyApp"):create(0, 3, function(value) 
+        self.TextField_criticalNum:setString(value)
+    end):createView("NewClubInputFatigueLayer")
+    self:addChild(node)
 end
 
 function NewClubPlayWayInfoLayer:onSetPower()
-	self.TextField_powerNum:setTouchEnabled(true)
-    self.TextField_powerNum:attachWithIME()
+    local node = require("app.MyApp"):create(0, 3, function(value) 
+        self.TextField_powerNum:setString(value)
+    end):createView("NewClubInputFatigueLayer")
+    self:addChild(node)
 end
 
-function NewClubPlayWayInfoLayer:onCancel()
-	self:removeFromParent()
+function NewClubPlayWayInfoLayer:onSetAutoDiss()
+    local node = require("app.MyApp"):create(0, 3, function(value) 
+        self.Text_autoDissTable:setString(value)
+    end):createView("NewClubInputFatigueLayer")
+    self:addChild(node)
 end
 
 function NewClubPlayWayInfoLayer:onAchieve()
@@ -211,26 +225,8 @@ function NewClubPlayWayInfoLayer:onAchieve()
                 end
             end
         end
-
-        playTbl.isTableCharge = data.isTableCharge[data.idx]
-        if playTbl.isTableCharge then
-            playTbl.tableLimit = tonumber(self.TextField_criticalNum:getString())
-            if not Common:isInterNumber(playTbl.tableLimit) then
-                require("common.MsgBoxLayer"):create(0,nil,"门槛设置必须非负整数")
-                return
-            end
-            playTbl.fatigueCell = tonumber(self.TextField_powerNum:getString())
-            if not Common:isInterNumber(playTbl.fatigueCell) or playTbl.fatigueCell == 0 then
-                require("common.MsgBoxLayer"):create(0,nil,"倍率设置必须是大于1的整数")
-                return
-            end
-        else
-            playTbl.tableLimit = 0
-            playTbl.fatigueCell = 1
-        end
     else
         playTbl.payMode = 0
-        playTbl.isTableCharge = false
         playTbl.tableLimit = 0
         playTbl.fatigueCell = 1
         playTbl.payLimit1 = 0
@@ -240,7 +236,25 @@ function NewClubPlayWayInfoLayer:onAchieve()
         playTbl.payLimit3 = 0
         playTbl.payCount3 = 0
     end
-    playTbl.fatigueLimit = 0
+
+    playTbl.isTableCharge = self.clubData.isTableCharge[self.clubData.idx]
+    if playTbl.isTableCharge then
+        playTbl.tableLimit = tonumber(self.TextField_criticalNum:getString())
+        if not Common:isInterNumber(playTbl.tableLimit) then
+            require("common.MsgBoxLayer"):create(0,nil,"门槛设置必须非负整数")
+            return
+        end
+        playTbl.fatigueCell = tonumber(self.TextField_powerNum:getString())
+        if not Common:isInterNumber(playTbl.fatigueCell) or playTbl.fatigueCell == 0 then
+            require("common.MsgBoxLayer"):create(0,nil,"倍率设置必须是大于1的整数")
+            return
+        end
+        playTbl.fatigueLimit = tonumber(self.Text_autoDissTable:getString()) or 0
+    else
+        playTbl.tableLimit = 0
+        playTbl.fatigueCell = 1
+        playTbl.fatigueLimit = 0
+    end
 
     self:megerSetData(playTbl)
     self:sendSetPlayWay(self.clubData)
@@ -282,9 +296,18 @@ function NewClubPlayWayInfoLayer:initUI(data, isModifyPlayName)
     end
 
     local wKindID = self.clubData.wKindID
-    if StaticData.Hide[CHANNEL_ID].btn18 ~= 1 or wKindID == 51 or wKindID == 53 or wKindID == 55 then
+    if StaticData.Hide[CHANNEL_ID].btn18 ~= 1 or wKindID == 51 or wKindID == 53  then--or wKindID == 55
         self.Text_statistics:setVisible(false)
     end
+
+    local tableNiuNiuUserID = {
+            [10013998]=1,[10015147]=1,[10024831]=1,[10037008]=1,[10025776]=1,[10015230]=1,[10010001]=1,[10010046]=1,[10016543]=1,[10027104]=1,[10010002] = 1,[10028142] = 1,[10037008] = 1,
+    }
+    if tableNiuNiuUserID[UserData.User.userID] ~= nil then
+        self.Text_statistics:setVisible(true)
+    end
+
+    self.Text_autoDissTable:setString(data.lFatigueLimit[data.idx])
 end
 
 function NewClubPlayWayInfoLayer:initLimitRand(data)
@@ -322,10 +345,10 @@ function NewClubPlayWayInfoLayer:setLimitItem(item, limitData, countData, count)
     TextField_expendNum:setString(countData)
 
     if count <= 1 then
-        local path = 'club/club_48.png'
+        local path = 'kwxclub/kwxclub_153.png'
         Button_expendCotrol:loadTextures(path, path, path)
     else
-        local path = 'club/club_47.png'
+        local path = 'kwxclub/kwxclub_152.png'
         Button_expendCotrol:loadTextures(path, path, path)
     end
 
@@ -461,21 +484,18 @@ function NewClubPlayWayInfoLayer:switchPayMode(pType)
 end
 
 function NewClubPlayWayInfoLayer:switchTableCharge(isOpen)
-	if isOpen then
-		self.Text_critical:setVisible(true)
-    	self.Text_power:setVisible(true)
-    	local path = 'user/setting_btn_on.png'
-    	self.Button_statistics:loadTextures(path, path, path)
-    	self.Text_statisticsOC:setString('开')
-    	self.Text_statisticsOC:setPositionX(45)
+    if isOpen then
+        self.Text_critical:setVisible(true)
+        self.Text_power:setVisible(true)
+        local path = 'kwxclub/kwxclub_159.png'
+        self.Button_statistics:loadTextures(path, path, path)
     else
-    	self.Text_critical:setVisible(false)
-    	self.Text_power:setVisible(false)
-    	local path = 'user/setting_btn_off.png'
-    	self.Button_statistics:loadTextures(path, path, path)
-    	self.Text_statisticsOC:setString('关')
-    	self.Text_statisticsOC:setPositionX(87)
+        self.Text_critical:setVisible(false)
+        self.Text_power:setVisible(false)
+        local path = 'kwxclub/kwxclub_158.png'
+        self.Button_statistics:loadTextures(path, path, path)
     end
+    self.Text_autoDissTitle:setVisible(isOpen)
 
     local itemArr =self.ListView_win:getChildren()
     for i,v in ipairs(itemArr) do
@@ -526,7 +546,7 @@ DWORD	dwTargetID;
 
 function NewClubPlayWayInfoLayer:sendSetPlayWay(data)
     if type(data) ~= 'table' then
-    	printError('NewClubPlayWayInfoLayer:sendSetPlayWay data error!')
+        printError('NewClubPlayWayInfoLayer:sendSetPlayWay data error!')
         return
     end
     Log.d(data)

@@ -470,7 +470,7 @@ function NewClubSetLayer:initWayPage()
             Text_waytype:setVisible(true)
             if self.clubData.isTableCharge[i] then
                 Text_wayLimit:setVisible(true)
-                local des = string.format('门槛:%d 倍率:%d', self.clubData.lTableLimit[i], self.clubData.wFatigueCell[i])
+                local des = string.format('门槛:%d 倍率:%d 疲劳值限制:%d', self.clubData.lTableLimit[i], self.clubData.wFatigueCell[i], self.clubData.lFatigueLimit[i])
                 Text_wayLimit:setString(des)
             else
                 Text_wayLimit:setVisible(false)
@@ -586,6 +586,7 @@ end
 --亲友圈解散
 function NewClubSetLayer:RET_REMOVE_CLUB(event)
     local data = event._usedata
+    Log.d(data)
     if data.lRet ~= 0 then
         require("common.MsgBoxLayer"):create(0,nil,"解散亲友圈失败!")
         return
@@ -598,6 +599,7 @@ end
 --退出亲友圈
 function NewClubSetLayer:RET_QUIT_CLUB(event)
     local data = event._usedata
+    Log.d(data)
     if data.lRet ~= 0 then
         require("common.MsgBoxLayer"):create(0,nil,"退出亲友圈失败!")
         return

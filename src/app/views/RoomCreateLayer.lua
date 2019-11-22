@@ -105,13 +105,10 @@ function RoomCreateLayer:onCreate(parameter)
     local games = {}
     games = clone(UserData.Game.tableSortGames)
     local isFound = false
-    local tableNiuNiuUserID = {
-        [10013998]=1,[10015147]=1,[10024831]=1,[10037008]=1,[10025776]=1
-    }
     for key, var in pairs(games) do
         local wKindID = tonumber(var)
         local data = StaticData.Games[wKindID]
-        if UserData.Game.tableGames[wKindID] ~= nil and Bit:_and(data.friends,1) ~= 0  and (data.type == type or type == nil ) and (wKindID ~= 51 or locationID == 51 or tableNiuNiuUserID[UserData.User.userID] ~= nil) and (wKindID ~= 53 or locationID == 53 or tableNiuNiuUserID[UserData.User.userID] ~= nil) then
+        if UserData.Game.tableGames[wKindID] ~= nil and Bit:_and(data.friends,1) ~= 0  and (data.type == type or type == nil ) and (StaticData.Games[wKindID].isVisible == 1 or UserData.User.wPrivilege == 1) then
             local img1 = "newroom/createv2_zuoqieye_liang.png" 
             local img2 = "newroom/createv2_zuoqieye_putong.png" 
             local item = uiButton_iten:clone()

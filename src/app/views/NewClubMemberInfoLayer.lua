@@ -49,8 +49,10 @@ function NewClubMemberInfoLayer:onCreate(params)
 	Log.d(params[1])
 	local data = params[1]
 	local clubData = params[2]
+    local userOffice = params[3]
 	self.data = data
 	self.clubData = clubData
+    self.userOffice = userOffice
 	self:initUI()
 
     local function textFieldEvent(sender, eventType)
@@ -120,11 +122,11 @@ end
 function NewClubMemberInfoLayer:initUI()
 	Common:requestUserAvatar(self.data.dwUserID, self.data.szLogoInfo, self.Image_head, "img")
 	if self.data.cbOnlineStatus == 1 then
-        self.Image_state:loadTexture('newclub/qyq_44.png')
+        self.Image_state:loadTexture('kwxclub/qyq_44.png')
     elseif self.data.cbOnlineStatus == 2 then
-        self.Image_state:loadTexture('newclub/qyq_45.png')
+        self.Image_state:loadTexture('kwxclub/qyq_45.png')
     elseif self.data.cbOnlineStatus == 100 then
-        self.Image_state:loadTexture('newclub/qyq_46.png')
+        self.Image_state:loadTexture('kwxclub/qyq_46.png')
     else
         self.Image_state:setVisible(false)
     end
@@ -183,6 +185,10 @@ function NewClubMemberInfoLayer:initUI()
             self.Button_setDes:setVisible(false)
             self.TextField_des:setTouchEnabled(false)
         end
+
+        if self.userOffice == 3 and self.clubData.bIsPartnerRemoveMember then
+            self.Button_memOut:setVisible(true)
+        end
     end
     self:setStopPlayState(self.data.isProhibit)
 end
@@ -198,11 +204,11 @@ end
 
 function NewClubMemberInfoLayer:setAdminState(isAdmin)
 	if isAdmin then
-        local btnPath = 'club/club_42.png'
+        local btnPath = 'kwxclub/club_42.png'
         self.Button_setMgr:loadTextures(btnPath, btnPath, btnPath)
         self.Text_position:setString('当前职位：管理员')
     else
-        local btnPath = 'club/club_16.png'
+        local btnPath = 'kwxclub/club_16.png'
         self.Button_setMgr:loadTextures(btnPath, btnPath, btnPath)
         if self.data.cbOffice == 3 then
             self.Text_position:setString('当前职位：合伙人')
@@ -214,10 +220,10 @@ end
 
 function NewClubMemberInfoLayer:setStopPlayState(isProhibit)
 	if isProhibit then
-    	local btnPath = 'club/club_41.png'
+    	local btnPath = 'kwxclub/club_41.png'
         self.Button_stopPlay:loadTextures(btnPath, btnPath, btnPath)
     else
-    	local btnPath = 'club/club_25.png'
+    	local btnPath = 'kwxclub/club_25.png'
         self.Button_stopPlay:loadTextures(btnPath, btnPath, btnPath)
     end
 end
@@ -229,7 +235,15 @@ function NewClubMemberInfoLayer:RET_SETTINGS_CLUB(event)
     local data = event._usedata
     Log.d(data)
     if data.lRet ~= 0 then
-        require("common.MsgBoxLayer"):create(0,nil,"管理员已达上限或数据异常!")
+        if data.lRet == 1 then
+            require("common.MsgBoxLayer"):create(0,nil,"权限不足!")
+        elseif data.lRet == 2 then
+            require("common.MsgBoxLayer"):create(0,nil,"非合伙人和非合伙人成员才能设置为管理员!")
+        elseif data.lRet == 3 then
+            require("common.MsgBoxLayer"):create(0,nil,"管理员人数已达上限!")
+        else
+            require("common.MsgBoxLayer"):create(0,nil,"设置错误!")
+        end
         return
     end
 

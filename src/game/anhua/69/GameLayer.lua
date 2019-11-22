@@ -644,7 +644,8 @@ function GameLayer:readBuffer(luaFunc, mainCmdID, subCmdID)
             for i = 1 , 4 do
                 _tagMsg.pBuffer.bDiscardCardCount[i] = luaFunc:readRecvByte()
             end 
-
+            _tagMsg.pBuffer.bIsHuangZhuang = luaFunc:readRecvBool()    --  黄庄标记
+            _tagMsg.pBuffer.cbHuangFanCount = luaFunc:readRecvByte()    --  黄番次数
             _tagMsg.pBuffer.bOutCardMark = {}
 			for i = 1, 4 do
 				_tagMsg.pBuffer.bOutCardMark[i] = {}

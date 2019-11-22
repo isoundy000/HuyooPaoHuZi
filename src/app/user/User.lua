@@ -56,6 +56,7 @@ local User = {
 	isOpenUserEffect = true, --是否开启用户特效
 	localIp = 0,         --本地ip
 	szErWeiMaLogo = "",  --亲友圈名片
+	wPrivilege = 0,			--无特权 1GM特权
 }
 
 function User:onEnter()
@@ -125,7 +126,8 @@ function User:EVENT_TYPE_NET_RECV_MESSAGE(event)
 		self.dwDrawCount = netInstance.cppFunc:readRecvDWORD()
 		self.dwLastLoginIP = netInstance.cppFunc:readRecvDWORD()
 		self.szErWeiMaLogo = netInstance.cppFunc:readRecvString(256)
-		print('名片二维码：', self.szErWeiMaLogo)		
+		self.szXianLiaoCode = netInstance.cppFunc:readRecvString(64)
+		self.wPrivilege = netInstance.cppFunc:readRecvWORD()
 		self:saveLoginInfo()
         self:talkdata()
         if cc.PLATFORM_OS_DEVELOPER ~= PLATFORM_TYPE then
@@ -152,7 +154,8 @@ function User:EVENT_TYPE_NET_RECV_MESSAGE(event)
 		self.dwDrawCount = netInstance.cppFunc:readRecvDWORD()
 		self.dwLastLoginIP = netInstance.cppFunc:readRecvDWORD()
 		self.szErWeiMaLogo = netInstance.cppFunc:readRecvString(256)
-		print('名片二维码：', self.szErWeiMaLogo)
+		self.szXianLiaoCode = netInstance.cppFunc:readRecvString(64)
+		self.wPrivilege = netInstance.cppFunc:readRecvWORD()
 		EventMgr:dispatch(EventType.SUB_CL_USER_INFO)
 		
 	elseif netID == NetMgr.NET_LOGIC and mainCmdID == NetMsgId.MDM_CL_LOGON and subCmdID == NetMsgId.SUB_CL_LOGON_ERROR then
@@ -442,14 +445,18 @@ function User:requestLocation()
 		if xmlHttpRequest.status == 200 then
 			print("定位:", xmlHttpRequest.response)
 			local response = json.decode(xmlHttpRequest.response)
-			if response["province"] == "湖南省" then
+			if response["status"] == "1" then
+				local data = {}
+				data.info = response["info"]
+				data.infocode = response["infocode"]
+				data.province = response["province"]
+				data.city = response["city"]
+				data.adcode = response["adcode"]
+				data.rectangle = response["rectangle"]
+				self.city = data.province .. data.city
+				local regionsCity = string.sub(data.city, 1, 6)
 				for key, var in pairs(StaticData.Regions) do
-					local province = response["province"]
-					local city = response["city"]
-					self.city = province .. city
-					city = string.sub(city, 1, 6)
-					print(string.len(city))
-					if string.find(var.name, city) then
+					if string.find(var.name, regionsCity) then
 						if regionID == - 1 and StaticData.Hide[CHANNEL_ID].btn6 == 1 then
 							cc.UserDefault:getInstance():setIntegerForKey(Default.UserDefault_RegionID, var.id)
 						end

@@ -42,10 +42,10 @@ function NewClubInputFatigueLayer:onCreate(param)
     self.callback = param[3]
 
     if self.flag == 1 then
-        self.Text_user_info:setString(string.format('%s ID:%d 疲劳值:%d', self.data.name, self.data.userID, self.data.fatigue))
+        self.Text_user_info:setString(self.data.name .. ' ID:' .. self.data.userID .. ' 疲劳值:' .. self.data.fatigue)
         self.Text_flag:setString('加')
     elseif self.flag == 2 then
-        self.Text_user_info:setString(string.format('%s ID:%d 疲劳值:%d', self.data.name, self.data.userID, self.data.fatigue))
+        self.Text_user_info:setString(self.data.name .. ' ID:' .. self.data.userID .. ' 疲劳值:' .. self.data.fatigue)
         self.Text_flag:setString('减')
     elseif self.flag == 3 then
         self.Text_flag:setVisible(false)

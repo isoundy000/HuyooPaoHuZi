@@ -36,6 +36,9 @@ function NewClubLayer:onConfig()
         {"Image_item"},
         {"Text_tips"},
         {"Panel_input"},
+        {"Button_choice"},
+        {"Panel_createBtn", "onSelCreate"},
+        {"Panel_joinBtn", "onSelJoin"}
     }
     self.curInputClubID = 0
 end
@@ -65,8 +68,13 @@ function NewClubLayer:onCreate(param)
     self.Image_item:retain()
     self.ListView_apply:removeAllChildren()
     local stype = param[1] or 2
-    self:switchUI(stype)
+    --self:switchUI(stype)
     UserData.Guild:getClubApplyInfo(UserData.User.userID)
+    if stype == 1 then 
+        self:switchUI(1)
+    else
+        self:switchUI(2)
+    end 
 end
 
 function NewClubLayer:createrInput( ... )
@@ -130,6 +138,7 @@ function NewClubLayer:switchUI(stype)
         self.Image_createFont:loadTexture("newclub/club_14.png")
         self.Image_joinLight:setVisible(false)
         self.Image_joinFont:loadTexture("newclub/club_15.png")
+        self.Button_choice:setBright(true)
     else
         self.Panel_create:setVisible(false)
         self.Panel_join:setVisible(true)
@@ -137,6 +146,7 @@ function NewClubLayer:switchUI(stype)
         self.Image_createFont:loadTexture("newclub/club_13.png")
         self.Image_joinLight:setVisible(true)
         self.Image_joinFont:loadTexture("newclub/club_16.png")
+        self.Button_choice:setBright(false)
     end
 end
 
@@ -279,9 +289,9 @@ end
 --创建亲友圈返回
 function NewClubLayer:RET_CREATE_CLUB(event)
     local data = event._usedata
+    Log.d(data)
     if data.lRet ~= 0 then
         if data.lRet == 1 then
-            --require("common.SceneMgr"):switchOperation(require("app.MyApp"):create("您不是代理不能创建亲友圈!"):createView("NewMallLayer"))
             require("common.MsgBoxLayer"):create(0,nil,"您不是代理不能创建亲友圈!")
         elseif data.lRet == 2 then
             require("common.MsgBoxLayer"):create(0,nil,"请联系代理授权创建亲友圈")
@@ -311,6 +321,7 @@ end
 --加入亲友圈
 function NewClubLayer:RET_JOIN_CLUB(event)
     local data = event._usedata
+    Log.d(data)
     if data.lRet == 0 then
         if not self:refreshApplyClubItem(self.curInputClubID, 0) then
             local tmpTbl = {}
@@ -332,18 +343,20 @@ end
 --被添加亲友圈
 function NewClubLayer:RET_ADDED_CLUB(event)
     local data = event._usedata
+    Log.d(data)
     self:removeFromParent()
     require("common.SceneMgr"):switchOperation(require("app.MyApp"):create(data):createView("NewClubInfoLayer"))
 end
 
 function NewClubLayer:RET_GET_CLUB_APPLICATION_RECORD(event)
     local data = event._usedata
-    dump(data)
+    Log.d(data)
     self:addOnceApplyItem(data)
 end
 
 function NewClubLayer:RET_REFUSE_JOIN_CLUB(event)
     local data = event._usedata
+    Log.d(data)
     self:refreshApplyClubItem(data.dwClubID, 2)
 end
 
