@@ -16,6 +16,7 @@ local Common            = require("common.Common")
 local Default           = require("common.Default")
 local GameConfig        = require("common.GameConfig")
 local Log               = require("common.Log")
+local Bit               = require("common.Bit")
 
 local NewClubFreeTableLayer = class("NewClubFreeTableLayer", cc.load("mvc").ViewBase)
 
@@ -88,7 +89,7 @@ function NewClubFreeTableLayer:getPlayWayNums()
     local num = 0
     for i,v in ipairs(self.clubData.wKindID or {}) do
         local gameinfo = StaticData.Games[v]
-        if gameinfo then
+        if v ~= 0 and gameinfo then
             num = num + 1
         end
     end
@@ -134,7 +135,7 @@ end
 function NewClubFreeTableLayer:RET_GET_CLUB_TABLE(event)
     local data = event._usedata
     Log.d(data)
-    if self:isFullPeopleTable(data) or self.clubData.bIsDisable then
+    if self:isFullPeopleTable(data) or Bit:_and(0x01, self.clubData.bIsDisable) == 0x01 then
     	return
     end
 

@@ -73,6 +73,8 @@ local NetMsgId = {
     SUB_CL_USER_PROP                = 12002,                           --用户道具
     REQ_CL_USER_INFO                = 1200,                            --请求用户信息
     SUB_CL_USER_INFO                = 12000,                           --用户信息
+    REQ_CL_SET_USER_INFO            = 1201,                            --设置用户信息
+    SUB_CL_SET_USER_INFO            = 12001,                           --设置用户信息
     
     --充值
     MDM_CL_RECHARGE                 = 130,                            --商城消息
@@ -217,20 +219,22 @@ local NetMsgId = {
     RET_GET_CLUB_OPERATE_RECORD         = 16051,                           --返回俱乐部操作记录
     RET_GET_CLUB_OPERATE_RECORD_FINISH  = 16056,                           --返回俱乐部操作记录
     
-    REQ_CREATE_CLUB3                    = 2214,                            --请求创建亲友圈
-    RET_CREATE_CLUB3                    = 22014,                           --返回创建亲友圈
-    REQ_SETTINGS_CLUB3                  = 2215,                            --设置亲友圈桌子信息
-    RET_SETTINGS_CLUB3                  = 22015,                           --返回设置亲友圈桌子信息
-    RET_UPDATE_CLUB_INFO3               = 22016,                           --更新亲友圈信息
-    RET_ADDED_CLUB3                     = 22017,                           --被添加亲友圈
-    REQ_GET_CLUB_LIST3                  = 2218,                            --获取亲友圈列表
-    RET_GET_CLUB_LIST3                  = 22018,                           --返回亲友圈列表
-    REQ_REFRESH_CLUB3                   = 2219,                            --请求刷新亲友圈
-    RET_REFRESH_CLUB3                   = 22019,                           --返回刷新亲友圈
-    REQ_SETTINGS_CLUB_PLAY              = 2220,                            --请求设置亲友圈玩法
-    RET_SETTINGS_CLUB_PLAY              = 22020,                           --返回设置亲友圈玩法
-    REQ_REFRESH_CLUB_PLAY3              = 2221,                            --请求刷新俱乐部玩法
-    RET_REFRESH_CLUB_PLAY               = 22021,                           --返回刷新俱乐部玩法
+    REQ_CREATE_CLUB3                    = 2404,                            --请求创建亲友圈
+    RET_CREATE_CLUB3                    = 24004,                           --返回创建亲友圈
+    REQ_SETTINGS_CLUB3                  = 2401,                            --设置亲友圈桌子信息
+    RET_SETTINGS_CLUB3                  = 24001,                           --返回设置亲友圈桌子信息
+    RET_UPDATE_CLUB_INFO3               = 24003,                           --更新亲友圈信息
+    RET_ADDED_CLUB3                     = 24006,                           --被添加亲友圈
+    REQ_GET_CLUB_LIST3                  = 2405,                            --获取亲友圈列表
+    RET_GET_CLUB_LIST3                  = 24005,                           --返回亲友圈列表
+    REQ_REFRESH_CLUB3                   = 2402,                            --请求刷新亲友圈
+    RET_REFRESH_CLUB3                   = 24002,                           --返回刷新亲友圈
+    REQ_SETTINGS_CLUB_PLAY              = 2335,                            --请求设置亲友圈玩法
+    RET_SETTINGS_CLUB_PLAY              = 23035,                           --返回设置亲友圈玩法
+    RET_SETTINGS_CLUB_PLAY_FINISH       = 23036,
+    REQ_REFRESH_CLUB_PLAY3              = 2337,                            --请求刷新俱乐部玩法
+    RET_REFRESH_CLUB_PLAY               = 23037,                           --返回刷新俱乐部玩法
+    RET_REFRESH_CLUB_PLAY_FINISH        = 23038,
 
     REQ_SETTINGS_CONFIG                 = 2222,                             --请求合伙人配置
     RET_SETTINGS_CONFIG                 = 22022,                            --返回合伙人配置
@@ -275,8 +279,22 @@ local NetMsgId = {
     REQ_FIND_CLUB_ONLINE_MEMBER         = 37,                              --查找亲友圈在线成员
     RET_FIND_CLUB_ONLINE_MEMBER         = 140,                             --查找亲友圈在线成员
 
+    REQ_CLUB_ANTI_LIMIT                 = 2501,                            --请求防沉迷设置下限值,
+    RET_CLUB_ANTI_LIMIT                 = 25001,                           --返回防沉迷设置下限值
+    REQ_CLUB_SETTING_ANTI_LIMIT         = 2502,                            --请求设置亲有圈沉迷下限
+    RET_CLUB_SETTING_ANTI_LIMIT         = 25002,                           --返回设置亲有圈沉迷下限
+    REQ_CLUB_ANTI_LIST                  = 2503,                            --请求防沉迷成员列表
+    RET_CLUB_ANTI_LIST                  = 25003,                           --返回防沉迷成员列表
+    RET_CLUB_ANTI_LIST_FINISH           = 25004,                           --完成
+    REQ_CLUB_SETTING_ANTI_MEMBER        = 2505,                            --设置成员沉迷信息
+    RET_CLUB_SETTING_ANTI_MEMBER        = 25005,                           --返回成员沉迷信息
+    REQ_CLUB_ANTI_REFRESH_LOG           = 2506,                            --请求沉迷刷新日志
+    RET_CLUB_ANTI_REFRESH_LOG           = 25006,                           --返回沉迷刷新日志
+    RET_CLUB_ANTI_REFRESH_LOG_FINISH    = 25007,
+
+
     --统计
-    REQ_GET_CLUB_STATISTICS_MYSELF      = 1657,                             --//请求亲友圈统计个人
+    REQ_GET_CLUB_STATISTICS_MYSELF      = 1657,                             ----请求亲友圈统计个人
 
     RET_GET_CLUB_STATISTICS_MYSELF		= 16057,						--返回亲友圈统计个人
 
@@ -307,8 +325,9 @@ local NetMsgId = {
     REQ_GET_CLUB_NOT_PARTNER_MEMBER     = 1670,                            --请求亲友圈非合伙人成员
     RET_GET_CLUB_NOT_PARTNER_MEMBER     = 16070,                           --返回亲友圈非合伙人成员
     RET_GET_CLUB_NOT_PARTNER_MEMBER_FINISH = 16071,                        --返回亲友圈非合伙人成员
-    REQ_FIND_CLUB_NOT_PARTNER_MEMBER    = 1672,                            --请求查找亲友圈非合伙人成员
-    RET_FIND_CLUB_NOT_PARTNER_MEMBER    = 16072,                           --返回查找亲友圈非合伙人成员
+    REQ_FIND_CLUB_NOT_PARTNER_MEMBER    = 2240,                            --请求查找亲友圈非合伙人成员
+    RET_FIND_CLUB_NOT_PARTNER_MEMBER    = 22040,                           --返回查找亲友圈非合伙人成员
+    RET_FIND_CLUB_NOT_PARTNER_MEMBER_FINISH = 22041,
     REQ_FIND_CLUB_PARTNER_MEMBER        = 2310,                            --查找亲友圈合伙人成员
     RET_FIND_CLUB_PARTNER_MEMBER        = 23010,                           --返回查找亲友圈合伙人成员
 
@@ -425,10 +444,10 @@ local NetMsgId = {
     REQ_GR_USER_NEXT_GAME = 6,      --下一局    
     REQ_GR_USER_PLAYER_INFO=4,     --获取玩家信息
     SUB_GF_USER_EXPRESSION = 500,   --用户表情
-    SUB_GF_USER_EFFECTS		=		503, -- //用户特效
+    SUB_GF_USER_EFFECTS		=		503, -- --用户特效
     SUB_GF_USER_VOICE = 501,       --语音
 
-    SUB_GF_USER_VOICE_YAYA	= 504, --//丫丫用户语音
+    SUB_GF_USER_VOICE_YAYA	= 504, ----丫丫用户语音
 
     REQ_GR_USER_PLAYER_INFO = 3,  --用户聊天接收
     SUB_GR_SEND_CHAT = 105,  --用户聊天转发
@@ -476,6 +495,9 @@ local NetMsgId = {
     SUB_C_OUT_CARD_PDK = 2,                 --出牌命令
     REC_SUB_S_SHOW_CARD_PDK = 110,          --跑得快防作弊发牌
 
+    SUB_S_USER_OPERATE_RESULT = 128,             --跑胡子消除吃碰界面
+
+
     REC_SUB_S_TIMECOUNT = 157,              --倍数显示
     SUB_PROXY_TABLE_DESC = 502,                             --代开房间描述
     SUB_C_SISHOU = 4,
@@ -487,7 +509,9 @@ local NetMsgId = {
     SUB_S_TING_CARD_CHANGE_NOTIFY = 151,--听牌提示
     SUB_C_OUT_CARD_TING_CARD = 5,
     
-    
+    REQ_USER_HOSTED	= 142,								--托管(客服端发送)
+    RET_USER_HOSTED = 143,								--托管(接收)
+
     --扑克
     --跑得快飘分
     REC_SUB_S_JIAPIAO	= 155,									--接受漂分
@@ -508,11 +532,11 @@ local NetMsgId = {
     SUB_S_JIA_PIAO = 153,
     SUB_S_JIA_PIAO_80 = 154 ,
     --聊天
-    REQ_ADD_CLUB_CHAT_REFRESH_MEMBER = 1688, -- //添加聊天及时刷新列表
+    REQ_ADD_CLUB_CHAT_REFRESH_MEMBER = 1688, -- --添加聊天及时刷新列表
 
-    REQ_DEL_CLUB_CHAT_REFRESH_MEMBER = 1689, -- //删除聊天及时刷新列表
+    REQ_DEL_CLUB_CHAT_REFRESH_MEMBER = 1689, -- --删除聊天及时刷新列表
 
-    REQ_CLUB_CHAT_RECORD = 1680, -- //请求聊天记录
+    REQ_CLUB_CHAT_RECORD = 1680, -- --请求聊天记录
 
     RET_CLUB_CHAT_RECORD   = 16080,--返回聊天记录
 
@@ -685,7 +709,26 @@ local NetMsgId = {
 
         REC_SUB_C_GONGPU				   = 1010,							  --公铺请求开始
         REC_SUB_S_GONGPU_RESULT			   = 114,							  --返回公铺请求成功结果
-        
+
+        -- 炸金花			
+        --SUB_C_START_GAME                   =1001,							    --请求开始游戏
+
+        REC_SUB_S_SEND_CARD_ZJH            =103,                             --发牌
+        SUB_C_ADD_SCORE				       =1002,							    --用户加注
+        SUB_S_ADD_SCORE					   =101,							    --加注结果
+        SUB_C_GIVE_UP_ZJH				   =1003,							    --放弃消息
+        SUB_S_GIVE_UP_ZJH				   =102,								--放弃跟注
+
+        SUB_C_COMPARE_CARD			       =1004,								--比牌消息
+        SUB_S_COMPARE_CARD				   =105,								--比牌跟注
+
+        SUB_C_LOOK_CARD                    =1005,								--看牌消息
+        SUB_S_LOOK_CARD					   =106,								--看牌跟注
+
+
+        --92 安化麻将特有消息
+        SUB_S_KING_CARD                    = 155,								--王牌数据
+        SUB_S_STARTHU_FOURKING             = 156,								--四王起手胡  
 }
 
 return NetMsgId

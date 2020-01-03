@@ -37,7 +37,7 @@ function Bag:EVENT_TYPE_NET_RECV_MESSAGE(event)
 
     if netID == NetMgr.NET_LOGIC and mainCmdID == NetMsgId.MDM_CL_USER  and subCmdID == NetMsgId.SUB_CL_USER_PROP then
         local wPropID = netInstance.cppFunc:readRecvWORD() --道具ID
-        local dwPropCount = netInstance.cppFunc:readRecvDWORD()  --道具数量
+        local dwPropCount = netInstance.cppFunc:readRecvLong()  --道具数量
         if StaticData.Items[wPropID] ~= nil then
             self.tableBag[wPropID] = dwPropCount
         end

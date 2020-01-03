@@ -109,6 +109,8 @@ function InterfaceCreateRoomNode:SUB_GR_CREATE_TABLE_FAILED(event)
             local data = clone(UserData.Share.tableShareParameter[12])
             require("app.MyApp"):create(data):createView("ShareLayer")
         end)
+    elseif errorID == 25 then
+        require("common.MsgBoxLayer"):create(2,nil,"防沉迷值已达下限!")
     elseif errorID == 30 then
         require("common.MsgBoxLayer"):create(2,nil,"该房间有距离限制,请开启定位!")
     else

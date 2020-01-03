@@ -87,11 +87,7 @@ function Chat:EVENT_TYPE_NET_RECV_MESSAGE(event)
             data.dwTableID = luaFunc:readRecvDWORD()
             data.wGameCount = luaFunc:readRecvWORD()
             data.wKindID = luaFunc:readRecvWORD()
-            local haveReadByte = 0
-            data.tableParameter, haveReadByte = require("common.GameConfig"):getParameter(data.wKindID,luaFunc)
-            if haveReadByte < 128 then
-                luaFunc:readRecvBuffer(128-haveReadByte)
-            end
+            data.tableParameter = require("common.GameConfig"):getParameter(data.wKindID,luaFunc)
         elseif data.cbType == 6 then -- 新语音
             data.szVoiceSign = luaFunc:readRecvString(256)
             data.szTime      = luaFunc:readRecvDWORD()
@@ -154,11 +150,7 @@ function Chat:EVENT_TYPE_NET_RECV_MESSAGE(event)
             data.dwTableID = luaFunc:readRecvDWORD()
             data.wGameCount = luaFunc:readRecvWORD()
             data.wKindID = luaFunc:readRecvWORD()
-            local haveReadByte = 0
-            data.tableParameter, haveReadByte = require("common.GameConfig"):getParameter(data.wKindID,luaFunc)
-            if haveReadByte < 128 then
-                luaFunc:readRecvBuffer(128-haveReadByte)
-            end
+            data.tableParameter = require("common.GameConfig"):getParameter(data.wKindID,luaFunc)
         elseif data.cbType == 6 then -- 新语音
             data.szVoiceSign = luaFunc:readRecvString(256)
             data.szTime      = luaFunc:readRecvDWORD()

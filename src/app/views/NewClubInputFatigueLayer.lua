@@ -42,10 +42,10 @@ function NewClubInputFatigueLayer:onCreate(param)
     self.callback = param[3]
 
     if self.flag == 1 then
-        self.Text_user_info:setString(self.data.name .. ' ID:' .. self.data.userID .. ' 疲劳值:' .. self.data.fatigue)
+        self.Text_user_info:setString(string.format('%s ID:%d 疲劳值:%d', self.data.name, self.data.userID, self.data.fatigue))
         self.Text_flag:setString('加')
     elseif self.flag == 2 then
-        self.Text_user_info:setString(self.data.name .. ' ID:' .. self.data.userID .. ' 疲劳值:' .. self.data.fatigue)
+        self.Text_user_info:setString(string.format('%s ID:%d 疲劳值:%d', self.data.name, self.data.userID, self.data.fatigue))
         self.Text_flag:setString('减')
     elseif self.flag == 3 then
         self.Text_flag:setVisible(false)
@@ -54,6 +54,9 @@ function NewClubInputFatigueLayer:onCreate(param)
         else
             self.Text_user_info:setString('元宝最低限度：' .. self.data .. ' (输入数量必须从小到大)')
         end
+    elseif self.flag == 4 then
+        self.Text_flag:setVisible(false)
+        self.Text_user_info:setString('请设置0~100百分比')
     end
 
 	self:initNumberArea()
@@ -75,6 +78,11 @@ function NewClubInputFatigueLayer:onYes()
     local inputVal = tonumber(roomNumber) or 0
     if self.flag == 3 and self.data > inputVal then
         require("common.MsgBoxLayer"):create(0,nil,"输入数量应大于最低值!")
+        return
+    end
+
+    if self.flag == 4 and inputVal > 100 then
+        require("common.MsgBoxLayer"):create(0,nil,"百分比值不能超过100!")
         return
     end
 

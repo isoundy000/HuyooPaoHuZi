@@ -63,6 +63,7 @@ function ClubTableLayer:onCreate(parames)
     uiButton_join:setPressedActionEnabled(true)
     Common:addTouchEventListener(uiButton_join,function() 
         uiButton_join:removeAllChildren()
+        cc.UserDefault:getInstance():setIntegerForKey('club_quick_game_playwayid', data.wTableSubType)
         uiButton_join:addChild(require("app.MyApp"):create(data.dwTableID):createView("InterfaceJoinRoomNode"))
     end)
 

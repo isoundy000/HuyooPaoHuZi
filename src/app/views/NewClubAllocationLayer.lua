@@ -48,6 +48,7 @@ end
 
 function NewClubAllocationLayer:onCreate(param)
 	self.data = param[1]
+    self.leaderId = param[2]
 	self.memberReqState = 0 -- 0 请求中 1-请求结束 2--全部请求结束
     self.curClubIndex = 1
 	self:reqNotPartnerMember()
@@ -82,13 +83,13 @@ function NewClubAllocationLayer:onFind()
 	end
 	local dwUserID = self.TextField_playID:getString()
 	if dwUserID ~= "" then
-		UserData.Guild:findClubNotPartnerMember(self.data.dwClubID, tonumber(dwUserID))
+		UserData.Guild:findClubNotPartnerMember(self.data.dwClubID, UserData.User.userID, 1, tonumber(dwUserID))
 	end
 end
 
 
 function NewClubAllocationLayer:reqNotPartnerMember()
-    UserData.Guild:getClubNotPartnerMember(2, self.curClubIndex, self.data.dwClubID)
+    UserData.Guild:getClubNotPartnerMember(2, self.curClubIndex, self.data.dwClubID, self.leaderId)
 end
 
 function NewClubAllocationLayer:scrollEventListen(sender, evenType)
