@@ -62,13 +62,6 @@ function NewClubInfoLayer:onConfig()
         {"Button_item"},
         {"Button_createClub","onCreateClub"},
         {"Button_joinClub","onJoinClub"},
-        {"Image_friendDes"},
-        {"Button_cardDes","onCardDes"},
-        {"Text_freeTime"},
-        {"Text_cardNum"},
-        {"Text_freeNum"},
-        {"Text_freeDes"},
-        {"Image_roomcardFrame"},
         {"Text_pilaozhi"},
         {"Button_shareChat", "onShareChat"},
 
@@ -87,6 +80,11 @@ function NewClubInfoLayer:onConfig()
         {"Panel_topRight"},
         {"Image_bottom"},
         {"Image_moneyIcon"},
+        {"Button_zjShare", "onZJShare"},
+        {"Text_yuanbaoNum"},
+        {"Button_addYB", "onAddYB"},
+        {"Button_ybFrame"},
+        {"Text_lAntiValue"},
     }
     self.clubData           = {}      --亲友圈大厅数据
     self.userOffice         = 2       --普通成员
@@ -119,6 +117,7 @@ function NewClubInfoLayer:onEnter()
     EventMgr:registListener(EventType.RET_SETTINGS_CONFIG ,self,self.RET_SETTINGS_CONFIG)
     EventMgr:registListener(EventType.RET_CLUB_CHAT_GET_UNREAD_MSG, self, self.RET_CLUB_CHAT_GET_UNREAD_MSG)
     EventMgr:registListener(EventType.REFRESH_CLUB_BG, self, self.REFRESH_CLUB_BG)
+    EventMgr:registListener(EventType.RET_CLUB_SETTING_ANTI_MEMBER,self,self.RET_CLUB_SETTING_ANTI_MEMBER)
     cc.UserDefault:getInstance():setStringForKey("UserDefault_Operation","NewClubInfoLayer")
 end
 
@@ -146,6 +145,7 @@ function NewClubInfoLayer:onExit()
     EventMgr:unregistListener(EventType.RET_SETTINGS_CONFIG ,self,self.RET_SETTINGS_CONFIG)
     EventMgr:unregistListener(EventType.RET_CLUB_CHAT_GET_UNREAD_MSG, self, self.RET_CLUB_CHAT_GET_UNREAD_MSG)
     EventMgr:unregistListener(EventType.REFRESH_CLUB_BG, self, self.REFRESH_CLUB_BG)
+    EventMgr:unregistListener(EventType.RET_CLUB_SETTING_ANTI_MEMBER,self,self.RET_CLUB_SETTING_ANTI_MEMBER)
     if self.clubData ~= nil then
         UserData.Guild:removeCloseClub(self.clubData.dwClubID)
         cc.UserDefault:getInstance():setIntegerForKey("UserDefault_NewClubID", self.clubData.dwClubID)
@@ -166,12 +166,12 @@ function NewClubInfoLayer:onCreate(param)
     self.ScrollView_clubTbl:setVisible(false)
     self.Image_playWayInfo:setVisible(false)
     self.Image_noSetWayFlag:setVisible(false)
-    self.Image_roomcardFrame:setVisible(false)
     self.Text_lastRecordName:setVisible(false)
     self.Button_mem:setVisible(false)
     self.Button_give:setVisible(false)
     self.Button_notice:setVisible(false)
     self.Button_partner:setVisible(false)
+    self.Button_share:setVisible(false)
     self.Button_tblItem:retain()
     self.Button_item:retain()
     self.ListView_more:removeAllChildren()
@@ -179,10 +179,6 @@ function NewClubInfoLayer:onCreate(param)
         self:onMoreClub()
     end
     Common:registerScriptMask(self.Image_moreClubFrame, callback)
-    local callback = function()
-        self:onCardDes()
-    end
-    Common:registerScriptMask(self.Image_friendDes, callback)
 
     local callback2 = function()
         self.Panel_mp:setVisible(false)
@@ -218,6 +214,7 @@ function NewClubInfoLayer:onCreate(param)
 
     local selectBg = cc.UserDefault:getInstance():getIntegerForKey('CurSelClubBg', 4)
     self.Image_bg:loadTexture(string.format('kwxclub/table/t_%d.jpg', selectBg))
+    self.Text_yuanbaoNum:setString(string.format("%d",UserData.Bag:getBagPropCount(1009)))
 
     local isShow = cc.UserDefault:getInstance():getBoolForKey('club_isallshow', true)
     if not isShow then
@@ -232,10 +229,18 @@ function NewClubInfoLayer:onCreate(param)
         self.Button_fatigue:loadTextures(path, path, path)
         self.Button_give:setVisible(false)
         self.Image_moneyIcon:loadTexture('common/yuanbaoc_icon.png')
+        self.Text_lAntiValue:setVisible(true)
     else
         local path = 'kwxclub/club_info_6.png'
         self.Button_fatigue:loadTextures(path, path, path)
         self.Image_moneyIcon:loadTexture('kwxclub/club_hall_3.png')
+        self.Text_lAntiValue:setVisible(false)
+    end
+
+    if CHANNEL_ID == 10 or CHANNEL_ID == 11 then
+        self.Button_ybFrame:setVisible(true)
+    else
+        self.Button_ybFrame:setVisible(false)
     end
 end
 
@@ -245,14 +250,19 @@ function NewClubInfoLayer:onReturn()
 end
 
 function NewClubInfoLayer:onShare()
-    local data = clone(UserData.Share.tableShareParameter[2])
-    if not data then
-        return
+    if CHANNEL_ID == 10 or CHANNEL_ID == 11 then
+        local node = require("app.MyApp"):create(self.clubData):createView("NewClubParnterAddMemLayer")
+        self:addChild(node)
+    else
+        local data = clone(UserData.Share.tableShareParameter[2])
+        if not data then
+            return
+        end
+        data.szShareTitle = string.format("亲友圈昵称:%s(亲友圈ID:%d)",self.clubData.szClubName,self.clubData.dwClubID)
+        data.szShareContent = "好友邀请您加入亲友圈畅玩游戏,自动开房,点击加入>>>"
+        data.szShareUrl = string.format(data.szShareUrl,self.clubData.dwClubID, UserData.User.userID)
+        require("app.MyApp"):create(data):createView("ShareLayer")
     end
-    data.szShareTitle = string.format("亲友圈昵称:%s(亲友圈ID:%d)",self.clubData.szClubName,self.clubData.dwClubID)
-    data.szShareContent = "好友邀请您加入亲友圈畅玩游戏,自动开房,点击加入>>>"
-    data.szShareUrl = string.format(data.szShareUrl,self.clubData.dwClubID, UserData.User.userID)
-    require("app.MyApp"):create(data):createView("ShareLayer")
 end
 
 function NewClubInfoLayer:onMingPian()
@@ -437,14 +447,6 @@ function NewClubInfoLayer:onJoinClub( ... )
     self:addChild(require("app.MyApp"):create(2):createView("NewClubLayer"))
 end
 
-function NewClubInfoLayer:onCardDes( ... )
-    if self.Image_friendDes:isVisible() then
-        self.Image_friendDes:setVisible(false)
-    else
-        self.Image_friendDes:setVisible(true)
-    end
-end
-
 function NewClubInfoLayer:onPlayWay()
     if self.clubData.dwUserID == UserData.User.userID or self:isAdmin(UserData.User.userID) then
         self:addChild(require("app.MyApp"):create(self.clubData):createView("NewClubSetPlaywayLayer"))
@@ -464,9 +466,6 @@ function NewClubInfoLayer:onShareChat()
     szParameter = Base64.encode(szParameter)
     data.szShareUrl = string.format(data.szShareUrl,szParameter)
     require("app.MyApp"):create(data):createView("ShareLayer")
-
-    -- local isRedPoint = self.Image_checkRedPoint:isVisible()
-    -- self:addChild(require("app.MyApp"):create(self.clubData, isRedPoint, self.userOffice, self.userFatigueValue):createView("NewClubMemberLayer"))
 end
 
 function NewClubInfoLayer:onPartner()
@@ -504,6 +503,17 @@ function NewClubInfoLayer:onIsSHow()
         self.Image_bottom:setVisible(true)
         cc.UserDefault:getInstance():setBoolForKey('club_isallshow',true)
     end
+end
+
+function NewClubInfoLayer:onZJShare()
+    local data = clone(UserData.Share.tableShareParameter[11])
+    require("app.MyApp"):create(data):createView("ShareLayer")  
+end
+
+function NewClubInfoLayer:onAddYB()
+    local data = clone(UserData.Share.tableShareParameter[12])
+    dump(data, '购买元宝：')
+    require("app.MyApp"):create(data):createView("ShareLayer") 
 end
 
 ------------------------------------------------------------------------
@@ -588,7 +598,7 @@ function NewClubInfoLayer:createClubTable(playwayId)
             
             local uiText_wayName = ccui.Helper:seekWidgetByName(item,"Text_wayName")
             uiText_wayName:setVisible(true)
-            uiText_wayName:enableOutline(cc.c4b(93, 126, 235), 1)
+            uiText_wayName:enableOutline(cc.c4b(0, 29, 255), 1)
             if self.clubData.szParameterName[i] ~= "" and self.clubData.szParameterName[i] ~= " " then
                 uiText_wayName:setString(self.clubData.szParameterName[i])
             else
@@ -597,6 +607,7 @@ function NewClubInfoLayer:createClubTable(playwayId)
             end
 
             local uiText_turnNum = ccui.Helper:seekWidgetByName(item,"Text_turnNum")
+            uiText_turnNum:setColor(cc.c3b(208, 179, 100))
             uiText_turnNum:enableOutline(cc.c4b(105, 91, 91), 1)
             uiText_turnNum:setVisible(true)
             local jushu = self.clubData.wGameCount[i]
@@ -656,6 +667,10 @@ end
 
 --刷新亲友圈
 function NewClubInfoLayer:updateClubInfo()
+    if not self.clubData.bIsDisable then
+        return
+    end
+
     self.Panel_bg:setVisible(true)
     self.Panel_ui:setVisible(true)
     self.Image_playWayInfo:setVisible(false)
@@ -911,6 +926,7 @@ function NewClubInfoLayer:refreshTableOneByOne(data)
 
     local uiText_wayName = ccui.Helper:seekWidgetByName(item,"Text_wayName")
     uiText_wayName:setVisible(true)
+    uiText_wayName:enableOutline(cc.c4b(0, 29, 255), 1)
     local idx = self:getMoreTableIndex(data.wTableSubType)
     if idx then
         if self.clubData.szParameterName[idx] ~= "" and self.clubData.szParameterName[idx] ~= " " then
@@ -924,6 +940,8 @@ function NewClubInfoLayer:refreshTableOneByOne(data)
     
     local uiText_turnNum = ccui.Helper:seekWidgetByName(item,"Text_turnNum")
     uiText_turnNum:setVisible(true)
+    uiText_turnNum:setColor(cc.c3b(208, 179, 100))
+    uiText_turnNum:enableOutline(cc.c4b(105, 91, 91), 1)
     uiText_turnNum:setString(data.wCurrentGameCount .. '/' .. data.wGameCount)
 
     local itemNode = nil
@@ -965,11 +983,11 @@ function NewClubInfoLayer:refreshTableOneByOne(data)
             isAdmin = true
         end
 
-        -- if (CHANNEL_ID == 10 or CHANNEL_ID == 11) and not isAdmin then
-        --     cc.UserDefault:getInstance():setIntegerForKey('club_quick_game_playwayid', data.wTableSubType)
-        --     require("common.SceneMgr"):switchTips(require("app.MyApp"):create(item.data.dwTableID,self:getEnterTableFigueValue(idx)):createView("InterfaceJoinRoomNode"))
-        --     return
-        -- end
+        if (CHANNEL_ID == 10 or CHANNEL_ID == 11) and not isAdmin then
+            cc.UserDefault:getInstance():setIntegerForKey('club_quick_game_playwayid', data.wTableSubType)
+            require("common.SceneMgr"):switchTips(require("app.MyApp"):create(item.data.dwTableID,self:getEnterTableFigueValue(idx)):createView("InterfaceJoinRoomNode"))
+            return
+        end
         require("app.MyApp"):create(function()
             local isDisableCB = function()
                 if Bit:_and(0x01, self.clubData.bIsDisable) == 0x01 then
@@ -1107,32 +1125,32 @@ end
 
 --刷新房卡信息
 function NewClubInfoLayer:refreshRoomCardInfo(data)
-    if type(data) ~= 'table' then
-        printError('NewClubInfoLayer:refreshRoomCardInfo data error')
-        return
-    end
-    local dwRoomCardCount = Common:itemNumberToString(data.dwRoomCardCount)
-    self.Text_cardNum:setString(dwRoomCardCount .. '张')
-    local dwSavingCount = Common:itemNumberToString(data.dwSavingCount)
-    self.Text_freeNum:setString(dwSavingCount .. '张')
-    self.Text_freeDes:setPositionX(0)
+    -- if type(data) ~= 'table' then
+    --     printError('NewClubInfoLayer:refreshRoomCardInfo data error')
+    --     return
+    -- end
+    -- local dwRoomCardCount = Common:itemNumberToString(data.dwRoomCardCount)
+    -- self.Text_cardNum:setString(dwRoomCardCount .. '张')
+    -- local dwSavingCount = Common:itemNumberToString(data.dwSavingCount)
+    -- self.Text_freeNum:setString(dwSavingCount .. '张')
+    -- self.Text_freeDes:setPositionX(0)
 
-    self.Text_freeTime:stopAllActions()
-    local time = data.dwDeadlineTime - UserData.Time:getServerTimer()  --os.time()
-    local function update()
-        time = data.dwDeadlineTime - UserData.Time:getServerTimer()
-        if time <= 0 then
-            time = 0
-            self.Text_freeTime:stopAllActions()
-        end
+    -- self.Text_freeTime:stopAllActions()
+    -- local time = data.dwDeadlineTime - UserData.Time:getServerTimer()  --os.time()
+    -- local function update()
+    --     time = data.dwDeadlineTime - UserData.Time:getServerTimer()
+    --     if time <= 0 then
+    --         time = 0
+    --         self.Text_freeTime:stopAllActions()
+    --     end
         
-        local d = math.floor(time / 86400)
-        local h = math.floor(time / 3600) % 24
-        local m = math.floor(time / 60) % 60
-        self.Text_freeTime:setString(string.format('%02d天 %02d小时 %02d分', d, h, m))
-    end
-    schedule(self.Text_freeTime, update, 1)
-    update()
+    --     local d = math.floor(time / 86400)
+    --     local h = math.floor(time / 3600) % 24
+    --     local m = math.floor(time / 60) % 60
+    --     self.Text_freeTime:setString(string.format('%02d天 %02d小时 %02d分', d, h, m))
+    -- end
+    -- schedule(self.Text_freeTime, update, 1)
+    -- update()
 end
 
 function NewClubInfoLayer:megerClubData(data)
@@ -1436,6 +1454,7 @@ function NewClubInfoLayer:RET_UPDATE_CLUB_PLAYER_INFO(event)
     Log.d(data)
     if CHANNEL_ID == 26 or CHANNEL_ID == 27 then
         self.Text_pilaozhi:setString(UserData.Bag:getBagPropCount(1009))
+        self.Text_lAntiValue:setString('沉迷值:' .. data.lAntiValue)
     else
         self.Text_pilaozhi:setString(data.lFatigueValue)
     end
@@ -1443,16 +1462,28 @@ function NewClubInfoLayer:RET_UPDATE_CLUB_PLAYER_INFO(event)
     self.userOffice = data.cbOffice
     self.userFatigueValue = data.lFatigueValue
 
+    self.Button_mp:setPositionX(-26)
     if UserData.User.userID == self.clubData.dwUserID or self:isAdmin(UserData.User.userID)  then
         self.Button_notice:setVisible(true)
         self.Button_partner:setVisible(true)
+        self.Button_share:setVisible(true)
     else
         self.Button_notice:setVisible(false)
         if self.userOffice == 3 then
+            -- 合伙人
             self.Button_partner:setVisible(true)
+            self.Button_share:setVisible(true)
         else
+            --普通成员
             self.Button_partner:setVisible(false)
+            self.Button_share:setVisible(false)
+            self.Button_mp:setPositionX(66)
         end
+    end
+
+    -- 暂时只有天娱渠道分享改导入成员功能
+    if not (CHANNEL_ID == 10 or CHANNEL_ID == 11) then
+        self.Button_share:setVisible(true)
     end
 end
 
@@ -1532,6 +1563,20 @@ function NewClubInfoLayer:REFRESH_CLUB_BG(event)
         if box then
             box.Image_CPWAll:setVisible(true)
             self.ScrollView_clubTbl:setPositionY(376)
+        end
+    end
+end
+
+function NewClubInfoLayer:RET_CLUB_SETTING_ANTI_MEMBER(event)
+    local data = event._usedata
+    dump(data)
+    if data.lRet ~= 0 then
+        return
+    end
+
+    if data.bOperatorType ~= 0 and data.dwUserID == UserData.User.userID then
+        if CHANNEL_ID == 26 or CHANNEL_ID == 27 then
+            self.Text_lAntiValue:setString('沉迷值:0')
         end
     end
 end

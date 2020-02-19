@@ -21,6 +21,7 @@ local NewClubSetPlaywayLayer = class("NewClubSetPlaywayLayer", cc.load("mvc").Vi
 function NewClubSetPlaywayLayer:onConfig()
     self.widget         = {
         {"Button_close", "onClose"},
+        {"Button_cw", "onCW"},
         {"Button_all", "onAll"},
         {"Button_mj", "onMj"},
         {"Button_pk", "onPK"},
@@ -60,20 +61,24 @@ function NewClubSetPlaywayLayer:onClose()
     self:removeFromParent()
 end
 
-function NewClubSetPlaywayLayer:onAll()
-	self:switchType(0)
+function NewClubSetPlaywayLayer:onCW()
+    self:switchType(0)
 end
 
-function NewClubSetPlaywayLayer:onMj()
+function NewClubSetPlaywayLayer:onAll()
 	self:switchType(1)
 end
 
-function NewClubSetPlaywayLayer:onPK()
+function NewClubSetPlaywayLayer:onMj()
 	self:switchType(2)
 end
 
-function NewClubSetPlaywayLayer:onZP()
+function NewClubSetPlaywayLayer:onPK()
 	self:switchType(3)
+end
+
+function NewClubSetPlaywayLayer:onZP()
+	self:switchType(4)
 end
 
 function NewClubSetPlaywayLayer:onAdd()
@@ -86,28 +91,47 @@ end
 -- itype 0 全部 1 麻将 2 扑克 3 字牌
 function NewClubSetPlaywayLayer:switchType(itype)
 	self.curSelType = itype
-	if itype == 0 then
+    if itype == 0 then
+        self.Button_cw:setBright(false)
+        self.Button_all:setBright(true)
+        self.Button_mj:setBright(true)
+        self.Button_pk:setBright(true)
+        self.Button_zp:setBright(true)
+	elseif itype == 1 then
+        self.Button_cw:setBright(true)
 		self.Button_all:setBright(false)
 		self.Button_mj:setBright(true)
 		self.Button_pk:setBright(true)
 		self.Button_zp:setBright(true)
-	elseif itype == 1 then
+	elseif itype == 2 then
+        self.Button_cw:setBright(true)
 		self.Button_all:setBright(true)
 		self.Button_mj:setBright(false)
 		self.Button_pk:setBright(true)
 		self.Button_zp:setBright(true)
-	elseif itype == 2 then
+	elseif itype == 3 then
+        self.Button_cw:setBright(true)
 		self.Button_all:setBright(true)
 		self.Button_mj:setBright(true)
 		self.Button_pk:setBright(false)
 		self.Button_zp:setBright(true)
-	elseif itype == 3 then
+	elseif itype == 4 then
+        self.Button_cw:setBright(true)
 		self.Button_all:setBright(true)
 		self.Button_mj:setBright(true)
 		self.Button_pk:setBright(true)
 		self.Button_zp:setBright(false)
 	end
 	self:initSelectPage(itype)
+end
+
+function NewClubSetPlaywayLayer:isCWPlayways(playway)
+    for i,v in ipairs(UserData.Game.tableCommonPlayways or {}) do
+        if v ~= 0 and v == playway then
+            return true;
+        end
+    end
+    return false
 end
 
 function NewClubSetPlaywayLayer:initSelectPage(itype)
@@ -131,7 +155,22 @@ function NewClubSetPlaywayLayer:initSelectPage(itype)
 	end
 
 	local count = 0
-	if itype == 0 then
+    if itype == 0 then
+        -- dump(UserData.Game.tableCommonPlayways)
+        for i,v in ipairs(self.clubData.dwPlayID) do
+            if self:isCWPlayways(v) then
+                count = count + 1
+                local item = items[count]
+                if not item then
+                    item = self.Image_item:clone()
+                    self.ListView_playway:pushBackCustomItem(item)
+                end
+                item:setVisible(true)
+                self:initPlaywayItem(item, count, i)
+            end
+        end
+
+	elseif itype == 1 then
 		for i,id in ipairs(self.clubData.dwPlayID) do
 			local kindid = self.clubData.wKindID[i]
 	        local gameinfo = StaticData.Games[kindid]
@@ -146,7 +185,7 @@ function NewClubSetPlaywayLayer:initSelectPage(itype)
 		        self:initPlaywayItem(item, count, i)
 	        end
 		end
-	elseif itype == 1 then
+	elseif itype == 2 then
 		for i,id in ipairs(self.clubData.dwPlayID) do
 			local kindid = self.clubData.wKindID[i]
 	        local gameinfo = StaticData.Games[kindid]
@@ -161,7 +200,7 @@ function NewClubSetPlaywayLayer:initSelectPage(itype)
 		        self:initPlaywayItem(item, count, i)
 	        end
 		end
-	elseif itype == 2 then
+	elseif itype == 3 then
 		for i,id in ipairs(self.clubData.dwPlayID) do
 			local kindid = self.clubData.wKindID[i]
 	        local gameinfo = StaticData.Games[kindid]
@@ -176,7 +215,7 @@ function NewClubSetPlaywayLayer:initSelectPage(itype)
 		        self:initPlaywayItem(item, count, i)
 	        end
 		end
-	elseif itype == 3 then
+	elseif itype == 4 then
 		for i,id in ipairs(self.clubData.dwPlayID) do
 			local kindid = self.clubData.wKindID[i]
 	        local gameinfo = StaticData.Games[kindid]
@@ -275,7 +314,8 @@ function NewClubSetPlaywayLayer:initPlaywayItem(item, count, index)
 	        require("common.Common"):playEffect("common/buttonplay.mp3")
 	        local kindid = self.clubData.wKindID[index]
 	        local playwayid = self.clubData.dwPlayID[index]
-	        local roomNode = require("app.MyApp"):create(kindid,1):createView("RoomCreateLayer")
+            local parameter = self.clubData.tableParameter[index]
+	        local roomNode = require("app.MyApp"):create(kindid,1,parameter):createView("RoomCreateLayer")
 	        self:addChild(roomNode)
 	        roomNode.data = {playid = playwayid, settype = 3, idx = index}
 	        roomNode:setName('RoomCreateLayer')
@@ -306,11 +346,11 @@ function NewClubSetPlaywayLayer:initPlaywayItem(item, count, index)
     
     if CHANNEL_ID == 26 or CHANNEL_ID == 27 then
         if self.clubData.wAntiCell[index] and self.clubData.wAntiCell[index] ~= 0 then
-            des = des .. string.format('倍率:%d/', self.clubData.wAntiCell[index])
+            des = des .. string.format('倍率:%s/', self.clubData.wAntiCell[index])
         end
     else
         if self.clubData.isTableCharge[index] then
-            des = des .. string.format('倍率:%d/门槛:%d/解散限制:%d/', self.clubData.wFatigueCell[index], self.clubData.lTableLimit[index], self.clubData.lFatigueLimit[index])
+            des = des .. string.format('倍率:%s/门槛:%s/解散限制:%s/', self.clubData.wFatigueCell[index], self.clubData.lTableLimit[index], self.clubData.lFatigueLimit[index])
         end
     end
     
@@ -332,7 +372,7 @@ function NewClubSetPlaywayLayer:initPlaywayItem(item, count, index)
         elseif cbPayMode == 2 then
             des = des .. string.format('赢家支付%s',self:getLimitDes(self.clubData.dwPayLimit[index], self.clubData.dwPayCount[index], self.clubData.isPercentage[index]))
         elseif cbPayMode == 3 then
-            des = des .. string.format('AA支付:%d', self.clubData.dwPayCount[index][1])
+            des = des .. string.format('AA支付:%s', self.clubData.dwPayCount[index][1])
         else
             --des = des .. '免费'
         end
@@ -359,16 +399,16 @@ function NewClubSetPlaywayLayer:getLimitDes(limitArr, payCountArr, isPercentage)
     for i,v in ipairs(limitArr) do
         if i == 1 then
             if isPercentage then
-                des = string.format('>%d:%d', v, payCountArr[i]) .. '%'
+                des = string.format('>%s:%s', v, payCountArr[i]) .. '%'
             else
-                des = string.format('>%d:%d', v, payCountArr[i])
+                des = string.format('>%s:%s', v, payCountArr[i])
             end
         else
             if v > 0 then
                 if isPercentage then
-                    des = des .. (string.format(' >%d:%d', v, payCountArr[i]) .. '%')
+                    des = des .. (string.format(' >%s:%s', v, payCountArr[i]) .. '%')
                 else
-                    des = des .. string.format(' >%d:%d', v, payCountArr[i])
+                    des = des .. string.format(' >%s:%s', v, payCountArr[i])
                 end
             end
         end
@@ -442,7 +482,7 @@ function NewClubSetPlaywayLayer:RET_SETTINGS_CLUB_PLAY(event)
     local data = event._usedata
     dump(data)
     if data.lRet ~= 0 then
-        require("common.MsgBoxLayer"):create(0,nil,"设置玩法失败")
+        require("common.MsgBoxLayer"):create(0,nil,"设置玩法失败! code=" .. data.lRet)
         return
     end
 

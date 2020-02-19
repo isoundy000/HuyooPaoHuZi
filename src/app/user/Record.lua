@@ -69,7 +69,12 @@ function Record:EVENT_TYPE_NET_RECV_MESSAGE(event)
         for i=1,8 do
             data.szNickNameEx[i] = luaFunc:readRecvString(32)  
         end
-
+        data.dwPlayID = luaFunc:readRecvDWORD()
+        data.fUserScore = luaFunc:readRecvLong()/100
+        data.fAllUserScoreScore = {}
+        for i=1,8 do
+            data.fAllUserScoreScore[i] = luaFunc:readRecvLong()/100
+        end 
 
         EventMgr:dispatch(EventType.RET_CL_MAIN_RECORD_BY_TYPE0,data)
         
@@ -95,6 +100,7 @@ function Record:EVENT_TYPE_NET_RECV_MESSAGE(event)
         data.dwClubID = luaFunc:readRecvDWORD() --
         data.isBigWinner = luaFunc:readRecvBool()
         data.isExist    = luaFunc:readRecvBool()
+
         data.dwUserIDEx  = {}
         for i=1,8 do
             data.dwUserIDEx[i] = luaFunc:readRecvDWORD()          
@@ -107,6 +113,12 @@ function Record:EVENT_TYPE_NET_RECV_MESSAGE(event)
         for i=1,8 do
             data.szNickNameEx[i] = luaFunc:readRecvString(32)  
         end
+        data.dwPlayID = luaFunc:readRecvDWORD()
+        data.fUserScore = luaFunc:readRecvLong()/100
+        data.fAllUserScoreScore = {}
+        for i=1,8 do
+            data.fAllUserScoreScore[i] = luaFunc:readRecvLong()/100
+        end 
 
         EventMgr:dispatch(EventType.RET_CL_MAIN_RECORD_BY_TYPE1,data)
     elseif netID == NetMgr.NET_LOGIC and mainCmdID == NetMsgId.MDM_CL_RECORD and subCmdID == NetMsgId.RET_CL_MAIN_RECORD_TOTAL_SCORE then
@@ -120,6 +132,14 @@ function Record:EVENT_TYPE_NET_RECV_MESSAGE(event)
         end
         for i=0,2 do
             data.lTypeScore[i] = luaFunc:readRecvLong()
+        end
+        data.fScore = {}
+        data.fTypeScore = {}
+        for i=0,2 do
+            data.fScore[i] = luaFunc:readRecvLong()/100
+        end
+        for i=0,2 do
+            data.fTypeScore[i] = luaFunc:readRecvLong()/100
         end
         EventMgr:dispatch(EventType.RET_CL_MAIN_RECORD_TOTAL_SCORE,data)
     elseif netID == NetMgr.NET_LOGIC and mainCmdID == NetMsgId.MDM_CL_RECORD and subCmdID == NetMsgId.RET_CL_MAIN_RECORD_BY_TYPE2 then
@@ -157,6 +177,12 @@ function Record:EVENT_TYPE_NET_RECV_MESSAGE(event)
         for i=1,8 do
             data.szNickNameEx[i] = luaFunc:readRecvString(32)  
         end
+        data.dwPlayID = luaFunc:readRecvDWORD()
+        data.fUserScore = luaFunc:readRecvLong()/100
+        data.fAllUserScoreScore = {}
+        for i=1,8 do
+            data.fAllUserScoreScore[i] = luaFunc:readRecvLong()/100
+        end 
 
         EventMgr:dispatch(EventType.RET_CL_MAIN_RECORD_BY_TYPE2,data)
         
@@ -195,6 +221,12 @@ function Record:EVENT_TYPE_NET_RECV_MESSAGE(event)
         for i=1,8 do
             data.szNickNameEx[i] = luaFunc:readRecvString(32)  
         end
+        data.dwPlayID = luaFunc:readRecvDWORD()
+        data.fUserScore = luaFunc:readRecvLong()/100
+        data.fAllUserScoreScore = {}
+        for i=1,8 do
+            data.fAllUserScoreScore[i] = luaFunc:readRecvLong()/100
+        end 
 
         EventMgr:dispatch(EventType.RET_CL_MAIN_RECORD_BY_TYPE3,data)
 
@@ -230,6 +262,11 @@ function Record:EVENT_TYPE_NET_RECV_MESSAGE(event)
         end
 
         data.szSubGameID = luaFunc:readRecvString(32)            --游戏主ID
+        data.fUserScore = {}
+        for i=1,8 do
+            data.fUserScore[i] = luaFunc:readRecvLong()/100
+        end 
+
 
         EventMgr:dispatch(EventType.SUB_CL_SUB_RECORD,data)
     elseif netID == NetMgr.NET_LOGIC and mainCmdID == NetMsgId.MDM_CL_RECORD and subCmdID == NetMsgId.SUB_CL_SUB_RECORD_FINISH then

@@ -199,12 +199,13 @@ function InterfaceCreateRoomNode:SUB_GR_LOGON_SUCCESS(event)
             self.tableParameter.FanXing.bType,self.tableParameter.FanXing.bCount,self.tableParameter.FanXing.bAddTun,
             self.tableParameter.bPlayerCountType,self.tableParameter.bPlayerCount,self.tableParameter.bLaiZiCount,self.tableParameter.bMaxLost,self.tableParameter.bYiWuShi,self.tableParameter.bLiangPai,self.tableParameter.bCanHuXi,self.tableParameter.bHuType,
             self.tableParameter.bFangPao,self.tableParameter.bSettlement,self.tableParameter.bStartTun,self.tableParameter.bSocreType,self.tableParameter.dwMingTang)
-    elseif self.wKindID == 34 then
-        NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbwbbbbbbbbdb",
+    elseif self.wKindID == 34 then 
+        NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbwbbbbbbbbdbbbb",
             CHANNEL_ID,self.nTableType,self.wTableSubType,self.wKindID,self.wGameCount,1,self.dwTargetID,
             self.tableParameter.FanXing.bType,self.tableParameter.FanXing.bCount,self.tableParameter.FanXing.bAddTun,
             self.tableParameter.bPlayerCountType,self.tableParameter.bPlayerCount,self.tableParameter.bLaiZiCount,self.tableParameter.bMaxLost,self.tableParameter.bYiWuShi,self.tableParameter.bLiangPai,self.tableParameter.bCanHuXi,self.tableParameter.bHuType,
-            self.tableParameter.bFangPao,self.tableParameter.bSettlement,self.tableParameter.bStartTun,self.tableParameter.bSocreType,self.tableParameter.dwMingTang,self.tableParameter.bDouble)
+            self.tableParameter.bFangPao,self.tableParameter.bSettlement,self.tableParameter.bStartTun,self.tableParameter.bSocreType,self.tableParameter.dwMingTang,self.tableParameter.bDouble,self.tableParameter.bDeathCard,self.tableParameter.bHostedTime,
+            self.tableParameter.bHostedSession) 
     elseif self.wKindID == 35 then
         NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbwbbbbbbbbdb",
             CHANNEL_ID,self.nTableType,self.wTableSubType,self.wKindID,self.wGameCount,1,self.dwTargetID,
@@ -230,12 +231,12 @@ function InterfaceCreateRoomNode:SUB_GR_LOGON_SUCCESS(event)
             self.tableParameter.bSocreType,self.tableParameter.dwMingTang,self.tableParameter.bLimit,self.tableParameter.bDeathCard)
                   
     elseif self.wKindID == 37 then
-        NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbwbbbbbbbbdb",
+        NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbwbbbbbbbbdbbb",
             CHANNEL_ID,self.nTableType,self.wTableSubType,self.wKindID,self.wGameCount,1,self.dwTargetID,
             self.tableParameter.FanXing.bType,self.tableParameter.FanXing.bCount,self.tableParameter.FanXing.bAddTun,self.tableParameter.bPlayerCountType,
             self.tableParameter.bPlayerCount,self.tableParameter.bLaiZiCount,self.tableParameter.bMaxLost,self.tableParameter.bYiWuShi,self.tableParameter.bLiangPai,
             self.tableParameter.bCanHuXi,self.tableParameter.bHuType,self.tableParameter.bFangPao,self.tableParameter.bSettlement,self.tableParameter.bStartTun,
-            self.tableParameter.bSocreType,self.tableParameter.dwMingTang,self.tableParameter.bLimit)
+            self.tableParameter.bSocreType,self.tableParameter.dwMingTang,self.tableParameter.bLimit,self.tableParameter.bHostedTime,self.tableParameter.bHostedSession)
             
     elseif self.wKindID == 32 then
         NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbwbbbbbbbbdb",
@@ -296,7 +297,7 @@ function InterfaceCreateRoomNode:SUB_GR_LOGON_SUCCESS(event)
         NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbbbb",
             CHANNEL_ID,self.nTableType,self.wTableSubType,self.wKindID,self.wGameCount,1,self.dwTargetID,self.tableParameter.bPlayerCount,
             self.tableParameter.bMaType,self.tableParameter.bMaCount,self.tableParameter.bQGHu,self.tableParameter.bQGHuJM,
-            self.tableParameter.bHuangZhuangHG,self.tableParameter.bQingSH,self.tableParameter.bJiePao,self.tableParameter.bQiDui)  
+            self.tableParameter.bHuangZhuangHG,self.tableParameter.bJiePao,self.tableParameter.mNiaoType,self.tableParameter.bQiDui)  
     elseif self.wKindID == 61 then
         NetMgr:getGameInstance():sendMsgToSvr(NetMsgId.MDM_GR_USER,NetMsgId.REQ_GR_CREATE_TABLE,"diwwwwdbbbbbbbb",
             CHANNEL_ID,self.nTableType,self.wTableSubType,self.wKindID,self.wGameCount,1,self.dwTargetID,self.tableParameter.bPlayerCount,

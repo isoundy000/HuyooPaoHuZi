@@ -62,6 +62,7 @@ local Net = {
 function Net:sendMsgToSvr(mainCmdId,subCmdId,strCmd,...)
     if self.connected == false then
         printInfo(string.format("网络已中断：mainCmdId = %d, subCmdId=%d,strCmd=%s",mainCmdId,subCmdId,strCmd))
+        OnNetDisconnect(self.id)
         return false
     end
     local arg = {...}

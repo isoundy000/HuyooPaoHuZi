@@ -27,6 +27,7 @@ local Game = {
     tableGames = {},                --游戏列表
     tableSortGames = {},            --游戏列表已排序
     talbeCommonGames = {},          --常玩游戏列表     
+    tableCommonPlayways = {},       --亲友圈常玩玩法
  }
 
 function Game:onEnter()
@@ -160,7 +161,11 @@ function Game:EVENT_TYPE_NET_RECV_MESSAGE(event)
         data.wCurrentNumber = luaFunc:readRecvWORD()        --当前局数
         data.tableParameter = require("common.GameConfig"):getParameter(data.wKindID,luaFunc)
         data.szGameID = luaFunc:readRecvString(32)
+        data.szTableName = luaFunc:readRecvString(32)
+        data.dwPlayID = luaFunc:readRecvDWORD()
+        data.wTableCellDenominator = luaFunc:readRecvWORD()        --房间倍率分母
         EventMgr:dispatch(EventType.SUB_GR_USER_ENTER,data)
+        self:addCommonPlayways(data.dwPlayID)
  
     elseif netID == NetMgr.NET_GAME and mainCmdID == NetMsgId.MDM_GR_USER and subCmdID == NetMsgId.SUB_GR_JOIN_TABLE_FAILED then 
         local luaFunc = NetMgr:getGameInstance().cppFunc
@@ -256,13 +261,60 @@ function Game:loadGameData()
 end
 Game:loadGameData()
 
---常玩游戏
-function Game:addCommonGames(wKindID)
-    for key, var in pairs(self.talbeCommonGames) do
-    	if var == wKindID then
-            table.remove(self.talbeCommonGames,key)
+
+--亲有圈常玩玩法
+function Game:addCommonPlayways(dwPlayID)
+    print('xxxxxxxxxxxxxxx', dwPlayID)
+    for key, var in pairs(self.tableCommonPlayways) do
+    	if var == dwPlayID then
+            table.remove(self.tableCommonPlayways,key)
             break
     	end
+    end
+    table.insert(self.tableCommonPlayways,1,dwPlayID)
+    local delCount = #self.tableCommonPlayways - 6
+    printInfo(self.tableCommonPlayways)
+    for i = 1, delCount do
+        table.remove(self.tableCommonPlayways,#self.tableCommonPlayways)
+    end
+    self:saveCommonPlayways()
+end
+
+function Game:saveCommonPlayways()
+    if #self.tableCommonPlayways <= 0 then
+        return
+    end
+    local data = json.encode(self.tableCommonPlayways)
+    local fp = io.open(FileName.tableCommonPlayways,"wb+")
+    fp:write(data)
+    fp:close()
+end
+
+function Game:loadCommonPlayways()
+	self.tableCommonPlayways = {}
+    if cc.FileUtils:getInstance():isFileExist(FileName.tableCommonPlayways) == true then
+        local fileData = cc.FileUtils:getInstance():getStringFromFile(FileName.tableCommonPlayways)
+        local jsonData = {}
+        if fileData ~= nil and fileData ~= "" then
+            jsonData = json.decode(fileData)     
+            for key, var in pairs(jsonData) do
+                table.insert(self.tableCommonPlayways,#self.tableCommonPlayways+1,var)
+                if #self.tableCommonPlayways >= 6 then
+                    break
+                end
+            end   
+        end
+    end
+end
+Game:loadCommonPlayways()
+
+--创房常玩游戏
+function Game:addCommonGames(wKindID)
+    for key, var in pairs(self.talbeCommonGames) do
+        if var == wKindID then
+            table.remove(self.talbeCommonGames,key)
+            break
+        end
     end
     table.insert(self.talbeCommonGames,1,wKindID)
     local delCount = #self.talbeCommonGames - 6
@@ -284,7 +336,7 @@ function Game:saveCommonGames()
 end
 
 function Game:loadCommonGames()
-	self.talbeCommonGames = {}
+    self.talbeCommonGames = {}
     if cc.FileUtils:getInstance():isFileExist(FileName.talbeCommonGames) == true then
         local fileData = cc.FileUtils:getInstance():getStringFromFile(FileName.talbeCommonGames)
         local jsonData = {}
@@ -301,13 +353,13 @@ function Game:loadCommonGames()
     if #self.talbeCommonGames <= 0 then
         for key, var in pairs(self.tableSortGames) do
             table.insert(self.talbeCommonGames,#self.talbeCommonGames+1,var)
-        	if #self.talbeCommonGames >= 6 then
-        	   break
-        	end
+            if #self.talbeCommonGames >= 6 then
+               break
+            end
         end
     end
     for key, var in pairs(self.talbeCommonGames) do
-    	printInfo(var)
+        printInfo(var)
     end
 end
 Game:loadCommonGames()

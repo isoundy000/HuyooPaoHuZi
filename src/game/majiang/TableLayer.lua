@@ -569,6 +569,7 @@ function TableLayer:doAction(action,pBuffer)
         end
         local time = 0.5
         local wSiceCount = pBuffer.wSiceCount
+
         if wSiceCount >= 2 then
             time = 3
             local visibleSize = cc.Director:getInstance():getVisibleSize()
@@ -580,14 +581,16 @@ function TableLayer:doAction(action,pBuffer)
             require("common.Common"):playEffect("majiang/sound/mandarin/yaoshuiazi.mp3")
             armature:runAction(cc.Sequence:create(cc.DelayTime:create(1),cc.CallFunc:create(function(sender,event) 
                 local tableSiceCount = {}
-                if wSiceCount >= 2 then
-                    if wSiceCount <= 7 then
-                        tableSiceCount[1] = math.random(1,wSiceCount-1)
-                    else
-                        tableSiceCount[1] = math.random(wSiceCount-6,6)
-                    end
-                    tableSiceCount[2] = wSiceCount - tableSiceCount[1]
-                end
+                -- if wSiceCount >= 2 then
+                --     if wSiceCount <= 7 then
+                --         tableSiceCount[1] = math.random(1,wSiceCount-1)
+                --     else
+                --         tableSiceCount[1] = math.random(wSiceCount-6,6)
+                --     end
+                --     tableSiceCount[2] = wSiceCount - tableSiceCount[1]
+                -- end
+                local cbValue = Bit:_and(wSiceCount,0xFFFF)
+                local cbColor = Bit:_rshift(Bit:_and(wSiceCount,0xFFFF),4)   
                 for key, var in pairs(tableSiceCount) do
                     local img = ccui.ImageView:create(string.format("game/shuaiz_%d.png",var))
                     armature:addChild(img,1000)
@@ -2473,8 +2476,8 @@ function TableLayer:initUI()
     
     local uiButton_position = ccui.Helper:seekWidgetByName(self.root,"Button_position")   -- 定位
     Common:addTouchEventListener(uiButton_position,function() 
-        --require("common.PositionLayer"):create(GameCommon.tableConfig.wKindID)
-        require("game.yongzhou.PositionLayer"):create(GameCommon.tableConfig.wKindID)
+        require("common.PositionLayer"):create(GameCommon.tableConfig.wKindID)
+        --require("game.yongzhou.PositionLayer"):create(GameCommon.tableConfig.wKindID)
     end)
     local uiPanel_playerInfoBg = ccui.Helper:seekWidgetByName(self.root,"Panel_playerInfoBg")
     if GameCommon.tableConfig.wCurrentNumber == 0 and  GameCommon.tableConfig.nTableType > TableType_GoldRoom  then

@@ -385,6 +385,10 @@ function NewClubSettingLayer:initBasePage()
         self.TextField_notice:setTouchEnabled(false)
         self.TextField_notice:setColor(cc.c3b(170,170,170))
     end
+
+    if CHANNEL_ID == 26 or CHANNEL_ID == 27 then
+        self.Button_liveClub:setVisible(false)
+    end
 end
 
 function NewClubSettingLayer:initShowPage()

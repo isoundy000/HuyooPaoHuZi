@@ -42,10 +42,10 @@ function NewClubInputFatigueLayer:onCreate(param)
     self.callback = param[3]
 
     if self.flag == 1 then
-        self.Text_user_info:setString(string.format('%s ID:%d 疲劳值:%d', self.data.name, self.data.userID, self.data.fatigue))
+        self.Text_user_info:setString(string.format('%s ID:%s 疲劳值:%s', self.data.name, self.data.userID, self.data.fatigue))
         self.Text_flag:setString('加')
     elseif self.flag == 2 then
-        self.Text_user_info:setString(string.format('%s ID:%d 疲劳值:%d', self.data.name, self.data.userID, self.data.fatigue))
+        self.Text_user_info:setString(string.format('%s ID:%s 疲劳值:%s', self.data.name, self.data.userID, self.data.fatigue))
         self.Text_flag:setString('减')
     elseif self.flag == 3 then
         self.Text_flag:setVisible(false)
@@ -66,16 +66,10 @@ function NewClubInputFatigueLayer:onCreate(param)
 end
 
 function NewClubInputFatigueLayer:onYes()
-	local roomNumber = ""
-    for i = 1 , 8 do
-        local numName = string.format("Text_number%d", i)
-        local Text_number = ccui.Helper:seekWidgetByName(self.Image_input, numName)
-        if Text_number:getString() ~= "" then
-            roomNumber = roomNumber .. Text_number:getString()
-        end
-    end
+    local Text_number = self.Image_input:getChildByName('Text_number')
+    local inputVal = tonumber(Text_number:getString())
+    inputVal = inputVal-inputVal%0.01
 
-    local inputVal = tonumber(roomNumber) or 0
     if self.flag == 3 and self.data > inputVal then
         require("common.MsgBoxLayer"):create(0,nil,"输入数量应大于最低值!")
         return
@@ -104,13 +98,15 @@ function NewClubInputFatigueLayer:initNumberArea()
                 self:resetNumber()
             elseif index == 11 then
                 self:deleteNumber()
+            elseif index == 12 then
+                self:inputNumber('.')
             else
                 self:inputNumber(index)
             end
         end
     end
 
-    for i = 0 , 11 do
+    for i = 0 , 12 do
         local btnName = string.format("Button_num%d", i)
         local Button_num = ccui.Helper:seekWidgetByName(self.Panel_btnNum, btnName)
         Button_num:setPressedActionEnabled(true)
@@ -121,45 +117,35 @@ end
 
 --重置数字
 function NewClubInputFatigueLayer:resetNumber()
-    for i = 1 , 8 do
-        local numName = string.format("Text_number%d", i)
-        local Text_number = ccui.Helper:seekWidgetByName(self.Image_input, numName)
-        if Text_number then
-            Text_number:setString("")
-        end
-    end
+    local Text_number = self.Image_input:getChildByName('Text_number')
+    Text_number:setString("")
 end
 
 --输入数字
-function NewClubInputFatigueLayer:inputNumber(num)
-    local roomNumber = ""
-    for i = 1 , 8 do
-        local numName = string.format("Text_number%d", i)
-        local Text_number = ccui.Helper:seekWidgetByName(self.Image_input, numName)
-        if Text_number:getString() == "" then
-            Text_number:setString(tostring(num))
-            roomNumber = roomNumber .. Text_number:getString()
-            if i == 8 then
-                -- UserData.Guild:addClubMember(self.clubData.dwClubID, tonumber(roomNumber), UserData.User.userID)
-            end
-            break
-        else
-            roomNumber = roomNumber .. Text_number:getString()
-        end
+function NewClubInputFatigueLayer:inputNumber(inputValue)
+    local Text_number = self.Image_input:getChildByName('Text_number')
+    local str = Text_number:getString()
+    if string.len(str) <= 0 and inputValue == '.' then
+        inputValue = '0.'
     end
+
+    if string.len(str) >= 8 then
+        return
+    end
+
+    str = str .. inputValue
+    if not tonumber(str) then
+        return
+    end
+
+    Text_number:setString(str)
 end
 
 --删除数字
 function NewClubInputFatigueLayer:deleteNumber()
-    for i = 8 , 1 , -1 do
-        local numName = string.format("Text_number%d", i)
-        local Text_number = ccui.Helper:seekWidgetByName(self.Image_input, numName)
-        if Text_number:getString() ~= "" then
-            Text_number:setString("")
-            break
-        end
-    end
+    local Text_number = self.Image_input:getChildByName('Text_number')
+    local str = Text_number:getString()
+    Text_number:setString(string.sub(str,1,string.len(str)-1))
 end
-
 
 return NewClubInputFatigueLayer

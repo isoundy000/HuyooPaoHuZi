@@ -76,22 +76,27 @@ function GameDesc:getGameDesc(wKindID,data,tableConfig)
         else
         end           
         if data.bPlayerCount == 2 then
-            desc = desc.."/两人场"
+            desc = desc.."/双人竞技"
         elseif data.bPlayerCount == 3 then
-            desc = desc.."/三人场"
+            desc = desc.."/3人房"
         elseif data.bPlayerCount == 4 then
-            desc = desc.."/四人场"
+            desc = desc.."/4人房"
         end
         if data.FanXing.bType == 1 then
-            desc = desc.."/翻醒"
+            desc = desc.."/翻省"
         elseif data.FanXing.bType == 2 then
-            desc = desc.."/翻醒"
+            desc = desc.."/翻省"
         elseif data.FanXing.bType == 3 then
-            desc = desc.."/跟醒"
+            desc = desc.."/跟省"
         else
-            desc = desc.."/不翻醒"
+            desc = desc.."/不翻省"
         end
-        desc = desc.."/6胡起胡，一胡一分，无王必胡"  
+        if data.FanXing.bAddTun == 3 then
+            desc = desc.."/一省三囤"
+        elseif data.FanXing.bAddTun == 1 then
+            desc = desc.."/一省一囤"
+        else                
+        end      
         if data.bMaxLost == 300 then
             desc = desc.."/300封顶"
         elseif data.bMaxLost == 600 then
@@ -105,31 +110,66 @@ function GameDesc:getGameDesc(wKindID,data,tableConfig)
             desc = "单王"
         elseif data.bLaiZiCount == 2 then
             desc = "双王"
+        elseif data.bLaiZiCount == 3 then
+            desc = "三王"
         else
         end             
         if data.bPlayerCount == 3 then
-            desc = desc.."/三人场"
+            desc = desc.."/3人房"
         elseif data.bPlayerCount == 2 then
-            desc = desc.."/二人场"
+            desc = desc.."/2人房"
         else
-            desc = desc.."/四人场"
+            desc = desc.."/4人房"
         end
         if data.FanXing.bType == 1 then
-            desc = desc.."/翻醒"
+            desc = desc.."/翻省"
         elseif data.FanXing.bType == 2 then
-            desc = desc.."/翻醒"
+            desc = desc.."/翻省"
         elseif data.FanXing.bType == 3 then
-            desc = desc.."/跟醒"
+            desc = desc.."/跟省"
         else
-            desc = desc.."/不翻醒"
-        end   
+            desc = desc.."/不翻省"
+        end
+        if data.FanXing.bType ~= 0 then 
+            if data.bDouble == 1 then
+                desc = desc.."/双省"
+            else
+                desc = desc.."/单省"
+            end
+        end 
+        if data.FanXing.bAddTun == 3 then
+            desc = desc.."/一省三囤"
+        elseif data.FanXing.bAddTun == 1 then
+            desc = desc.."/一省一囤"
+        else                
+        end      
         if data.bMaxLost == 300 then
             desc = desc.."/300封顶"
         elseif data.bMaxLost == 600 then
             desc = desc.."/600封顶"
         end
-        if data.FanXing.bAddTun ==3 then 
-            desc = desc.."/一醒三囤"
+        if data.bDeathCard == 1 then
+            desc = desc.."/亡牌"         
+        end          
+        if data.bHostedTime == 1 then
+            desc = desc.."/一分钟托管"
+        elseif data.bHostedTime == 2 then
+            desc = desc.."/两分钟托管"
+        elseif data.bHostedTime == 3 then
+            desc = desc.."/三分钟托管"
+        elseif data.bHostedTime == 5 then
+            desc = desc.."/五分钟托管"
+        elseif data.bHostedTime == 0 then
+            desc = desc.."/无托管"
+        end
+     
+
+        if data.bHostedSession == 1 then
+            desc = desc.."/单局托管"
+        elseif data.bHostedSession == 3 then
+            desc = desc.."/三局托管"
+        elseif data.bHostedSession >= 6 then
+            desc = desc.."/全局托管"
         end
     elseif  wKindID == 36 then       
         if data.bPlayerCount == 3 then
@@ -178,72 +218,158 @@ function GameDesc:getGameDesc(wKindID,data,tableConfig)
 --        elseif data.bMaxLost == 600 then
 --            desc = desc.."/600封顶"
         end
-        
-    elseif wKindID == 31 then  
-           if data.bLaiZiCount == 0 then
-           desc = desc.."无王"
-       elseif data.bLaiZiCount == 1 then
-           desc = desc.."单王"
-       elseif data.bLaiZiCount == 2 then
-           desc = desc.."双王"
-       elseif data.bLaiZiCount == 3 then
-           desc = desc.."三王"
-       elseif data.bLaiZiCount == 4 then
-           desc = desc.."四王"
-       end    
-       if data.bPlayerCount == 3 then
-           desc = desc.."/三人激情"
-       elseif data.bPlayerCount == 4 then
-           desc = desc.."/四人(坐醒)"
-       elseif data.bPlayerCount == 2 then
-           desc = desc.."/两人PK"
-       end
-       if data.bCanHuXi == 15 then
-           desc = desc.."/15胡息"
-       elseif data.bCanHuXi == 21 then
-           desc = desc.."/21胡息"
-       else                
-       end 
-       if data.FanXing.bType == 1 then
-           desc = desc.."/翻醒"
-       elseif data.FanXing.bType == 2 then
-           desc = desc.."/翻醒"
-       elseif data.FanXing.bType == 3 then
-           desc = desc.."/跟醒"
-       else
-           desc = desc.."/不翻醒"
-       end
-       if data.bDeathCard == 1 then
-            desc = desc.."/亡牌"            
-       end 
-       if data.FanXing.bAddTun == 3 then
-           desc = desc.."/一醒三囤"
-       elseif data.FanXing.bAddTun == 2 then
-           desc = desc.."/双醒"
-       elseif data.FanXing.bAddTun == 1 then
-           desc = desc.."/单醒"
-       else                
-       end  
-       if data.bLaiZiCount == 4 then 
-           if data.bLimit == 1 then
-               desc = desc.."/按番限胡"
-           elseif data.bLimit == 2 then
-               desc = desc.."/按王限胡"
-           end
-       else
-           desc = desc.."/有王必须自摸"
-       end
-       if Bit:_and(data.dwMingTang,0x8) ~= 0 then
-           desc = desc.."/红转朱黑"
-       end
-       -- if Bit:_and(data.dwMingTang,0x01) ~= 0 then
-       --     desc = desc.."/带底"
-       -- end
-       if data.bMaxLost == 300 then
-           desc = desc.."/300封顶"
-       elseif data.bMaxLost == 600 then
-           desc = desc.."/600封顶"
-       end
+    elseif wKindID == 37 or wKindID == 33 or wKindID == 35 or wKindID == 36 then       
+        if data.bPlayerCount == 3 then
+            desc = desc.."3人房"
+        elseif data.bPlayerCount == 4 then
+            desc = desc.."4人房"
+        elseif data.bPlayerCount == 2 then
+            desc = desc.."双人竞技"
+        end
+        desc = desc..string.format("/%d胡起胡",data.bCanHuXi) 
+        if data.FanXing.bType == 1 then
+            desc = desc.."/翻省"
+        elseif data.FanXing.bType == 2 then
+            desc = desc.."/翻省"
+        elseif data.FanXing.bType == 3 then
+            desc = desc.."/跟省"
+        else
+            desc = desc.."/不翻省"
+        end
+        if data.FanXing.bAddTun == 3 then
+            desc = desc.."/一省三囤"
+        elseif data.FanXing.bAddTun == 2 then
+            desc = desc.."/双省"
+        elseif data.FanXing.bAddTun == 1 then
+            desc = desc.."/单省"
+        else                
+        end  
+        if data.bLaiZiCount == 4 then 
+            if data.bLimit == 1 then
+                desc = desc.."/按番限胡"
+            elseif data.bLimit == 2 then
+                desc = desc.."/按王限胡"
+            end
+        end
+        if Bit:_and(data.dwMingTang,0x8) ~= 0 then
+            desc = desc.."/红转点"
+        end
+        if Bit:_and(data.dwMingTang,0x10) ~= 0 then
+            desc = desc.."/红转黑"
+        end
+        if Bit:_and(data.dwMingTang,0x01) ~= 0 then
+            desc = desc.."/带底"
+        end
+
+        if data.bMaxLost == 300 then
+            desc = desc.."/300封顶"
+        elseif data.bMaxLost == 600 then
+            desc = desc.."/600封顶"
+        end
+
+        if wKindID == 37 then
+            if data.bSettlement == 1 then
+                desc = desc.."/带一底"
+            elseif data.bSettlement == 3 then
+                desc = desc.."/带三底"
+            elseif data.bSettlement == 5 then
+                desc = desc.."/带五底"
+            end
+        end
+
+        if data.bHostedTime == 1 then
+            desc = desc.."/一分钟托管"
+        elseif data.bHostedTime == 2 then
+            desc = desc.."/两分钟托管"
+        elseif data.bHostedTime == 3 then
+            desc = desc.."/三分钟托管"
+        elseif data.bHostedTime == 5 then
+            desc = desc.."/五分钟托管"
+        elseif data.bHostedTime == 0 then
+            desc = desc.."/无托管"
+        end
+
+        if data.bHostedSession then
+            if data.bHostedSession == 1 then
+                desc = desc.."/单局托管"
+            elseif data.bHostedSession == 3 then
+                desc = desc.."/三局托管"
+            elseif data.bHostedSession >= 6 then
+                desc = desc.."/全局托管"
+            end
+        end
+            
+    elseif wKindID == 31 then   
+        if data.bLaiZiCount == 1 then
+            desc = desc.."单王"
+        elseif data.bLaiZiCount == 2 then
+            desc = desc.."双王"
+        elseif data.bLaiZiCount == 3 then
+            desc = desc.."三王"
+        elseif data.bLaiZiCount == 4 then
+            desc = desc.."四王"
+        end    
+        if data.bPlayerCount == 3 then
+            desc = desc.."/3人房"
+        elseif data.bPlayerCount == 4 then
+            desc = desc.."/4人房"
+        elseif data.bPlayerCount == 2 then
+            desc = desc.."/双人竞技"
+        end
+        if data.bCanHuXi == 15 then
+            desc = desc.."/15胡息"
+        elseif data.bCanHuXi == 18 then
+            desc = desc.."/18胡息"
+        elseif data.bCanHuXi == 21 then
+            desc = desc.."/21胡息"
+        else                
+        end 
+        if data.FanXing.bType == 1 then
+            desc = desc.."/翻省"
+        elseif data.FanXing.bType == 2 then
+            desc = desc.."/翻省"
+        elseif data.FanXing.bType == 3 then
+            desc = desc.."/跟省"
+        else
+            desc = desc.."/不翻省"
+        end
+        if data.FanXing.bAddTun == 3 then
+            desc = desc.."/一省三囤"
+        elseif data.FanXing.bAddTun == 2 then
+            desc = desc.."/双省"
+        elseif data.FanXing.bAddTun == 1 then
+            desc = desc.."/单省"
+        else                
+        end  
+        if data.bLaiZiCount == 4 then 
+            if data.bLimit == 1 then
+                desc = desc.."/按番限胡"
+            elseif data.bLimit == 2 then
+                desc = desc.."/按王限胡"
+            end
+        end
+        if Bit:_and(data.dwMingTang,0x8) ~= 0 then
+            desc = desc.."/红转点"
+        end
+        if Bit:_and(data.dwMingTang,0x10) ~= 0 then
+            desc = desc.."/红转黑"
+        end
+        -- if Bit:_and(data.dwMingTang,0x01) ~= 0 then
+        --     desc = desc.."/带底"
+        -- end
+        if data.bMaxLost == 300 then
+            desc = desc.."/300封顶"
+        elseif data.bMaxLost == 600 then
+            desc = desc.."/600封顶"
+        end
+
+        if data.bSettlement == 1 then
+            desc = desc.."/带一底"
+        elseif data.bSettlement == 3 then
+            desc = desc.."/带三底"
+        elseif data.bSettlement == 5 then
+            desc = desc.."/带五底"
+        end
     
     elseif wKindID == 38 then        
        if data.bPlayerCount == 3 then

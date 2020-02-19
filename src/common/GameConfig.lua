@@ -149,12 +149,12 @@ function GameConfig:getParameter(wKindID,luaFunc)
         data.bStartTun = luaFunc:readRecvByte()                     --囤数起始算法  0起始胡息一囤  1起始胡息二囤 210胡息三囤<=15胡息每多1胡息+1囤    
         data.bSocreType = luaFunc:readRecvByte()                    --0低分*囤数总和*名堂番数总和  1低分*囤数总和*名堂番数乘积
         data.dwMingTang = luaFunc:readRecvDWORD()                   --包含的名堂有哪些             
-        data.bDouble = luaFunc:readRecvByte()                       --单双省
-        data.bDeathCard = luaFunc:readRecvByte()
-        data.bHostedTime = luaFunc:readRecvByte()
-        data.bHostedSession = luaFunc:readRecvByte()
-        haveReadByte = 24    --已读长度，每次增加或者减少都要修改该值，Byte1个字节 WORD2个字节 DWORD4个字节
-        
+        data.bDouble = luaFunc:readRecvByte()                       --单双省   
+        data.bDeathCard = luaFunc:readRecvByte()                --亡牌   1 有  0 无
+        data.bHostedTime = luaFunc:readRecvByte()               --托管时间
+        data.bHostedSession = luaFunc:readRecvByte()                 --托管局数
+        haveReadByte = 24    --已读长度，每次增加或者减少都要修改该值，Byte1个字节 WORD2个字节 DWORD4个字节  
+
     elseif wKindID == 35 then
         data.FanXing = {}
         data.FanXing.bType = luaFunc:readRecvByte()                        --翻省    0默认没有反省  1上省  2下省  3跟省
@@ -241,12 +241,14 @@ function GameConfig:getParameter(wKindID,luaFunc)
         data.bCanHuXi = luaFunc:readRecvByte()                      --起胡数  0 3 6 10 15  
         data.bHuType = luaFunc:readRecvByte()                       --胡牌类型  0自摸翻倍  1接炮
         data.bFangPao = luaFunc:readRecvByte()                      --是否有放跑功能
-        data.bSettlement = luaFunc:readRecvByte()                   --结算是否按三胡一囤，否则一胡一囤
+        data.bSettlement = luaFunc:readRecvByte()                   --结算是否按三胡一囤，否则一胡一囤  带底
         data.bStartTun = luaFunc:readRecvByte()                     --囤数起始算法  0起始胡息一囤  1起始胡息二囤 210胡息三囤<=15胡息每多1胡息+1囤    
         data.bSocreType = luaFunc:readRecvByte()                    --0低分*囤数总和*名堂番数总和  1低分*囤数总和*名堂番数乘积
         data.dwMingTang = luaFunc:readRecvDWORD()                   --包含的名堂有哪些             
         data.bLimit = luaFunc:readRecvByte()                        --限制条件
-        haveReadByte = 21    --已读长度，每次增加或者减少都要修改该值，Byte1个字节 WORD2个字节 DWORD4个字节
+        data.bHostedTime = luaFunc:readRecvByte()               --托管时间
+        data.bHostedSession = luaFunc:readRecvByte()                 --托管局数
+        haveReadByte = 23    --已读长度，每次增加或者减少都要修改该值，Byte1个字节 WORD2个字节 DWORD4个字节
         
     elseif wKindID == 31 then
         data.FanXing = {}
@@ -262,7 +264,7 @@ function GameConfig:getParameter(wKindID,luaFunc)
         data.bCanHuXi = luaFunc:readRecvByte()                      --起胡数  0 3 6 10 15  
         data.bHuType = luaFunc:readRecvByte()                       --胡牌类型  0自摸翻倍  1接炮
         data.bFangPao = luaFunc:readRecvByte()                      --是否有放跑功能
-        data.bSettlement = luaFunc:readRecvByte()                   --结算是否按三胡一囤，否则一胡一囤
+        data.bSettlement = luaFunc:readRecvByte()                   --带底
         data.bStartTun = luaFunc:readRecvByte()                     --囤数起始算法  0起始胡息一囤  1起始胡息二囤 210胡息三囤<=15胡息每多1胡息+1囤    
         data.bSocreType = luaFunc:readRecvByte()                    --0低分*囤数总和*名堂番数总和  1低分*囤数总和*名堂番数乘积
         data.dwMingTang = luaFunc:readRecvDWORD()                   --包含的名堂有哪些             

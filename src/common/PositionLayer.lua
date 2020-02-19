@@ -12,7 +12,7 @@ local PositionLayer = class("PositionLayer", function()
     return ccui.Layout:create()
 end)
 
-
+local GameCommon
 function PositionLayer:create(wKindID)
     local view = PositionLayer.new()
     view:onCreate(wKindID)
@@ -30,136 +30,151 @@ function PositionLayer:create(wKindID)
 end
 
 function PositionLayer:onEnter()
-
 end
 
 function PositionLayer:onExit()
-    
+    EventMgr:unregistListener(EventType.RET_GAMES_USER_POSITION,self,self.RET_GAMES_USER_POSITION)    
 end
 
 function PositionLayer:onCleanup()
 end
 
 function PositionLayer:onCreate(wKindID)
+    EventMgr:registListener(EventType.RET_GAMES_USER_POSITION,self,self.RET_GAMES_USER_POSITION)
     local visibleSize = cc.Director:getInstance():getVisibleSize()
     local csb = cc.CSLoader:createNode("PositionLayer.csb")
     self:addChild(csb)
     self.root = csb:getChildByName("Panel_root")
     
-    local uiImage_playerInfoBg = ccui.Helper:seekWidgetByName(self.root,"Image_playerInfoBg")
---    Common:playPopupAnim(uiImage_playerInfoBg)
+    local Image_distanceBg = ccui.Helper:seekWidgetByName(self.root,"Image_distanceBg")
+    Common:playPopupAnim(Image_distanceBg)
     Common:addTouchEventListener(self.root,function() 
         self:removeFromParent()
     end,true)
-    local visibleSize = cc.Director:getInstance():getVisibleSize()
-    local uiImage_playerInfoBg = ccui.Helper:seekWidgetByName(self.root,"Image_playerInfoBg")
-    local wChairID = 0
-    local GameCommon = nil
-    if wKindID == 32 then
-       GameCommon = require("game.yongzhou.GameCommon") 
+
+    GameCommon = nil
+    if wKindID == 43 then
+       GameCommon = require("game.paohuzi.43.GameCommon") 
     elseif StaticData.Games[wKindID].type == 1 then
         GameCommon = require("game.paohuzi.GameCommon")
     elseif StaticData.Games[wKindID].type == 2 then
         GameCommon = require("game.puke.GameCommon")    
     elseif StaticData.Games[wKindID].type == 3 then 
-        GameCommon = require("game.majiang.GameCommon")
+        if wKindID == 42  then
+            GameCommon = require("game.laopai.GameCommon")
+        else
+            GameCommon = require("game.majiang.GameCommon")
+        end 
     else
         return
-    end
-    
-    for key, var in pairs(GameCommon.player) do
-        if var.dwUserID == GameCommon.dwUserID then
-            wChairID = var.wChairID
-            break
-        end
     end
     if wKindID == 42 then       
         GameCommon.gameConfig = {}  
         GameCommon.gameConfig.bPlayerCount = 4
     end  
-    if GameCommon.gameConfig.bPlayerCount ~= 4 then
-        local uiPanel_player4 = ccui.Helper:seekWidgetByName(self.root,"Panel_player4")
-        uiPanel_player4:setVisible(false)
-    end
-   if GameCommon.gameConfig.bPlayerCount == 2 then
-        if StaticData.Games[wKindID].type == 1 then
-            local uiPanel_player3 = ccui.Helper:seekWidgetByName(self.root,"Panel_player3")
-            uiPanel_player3:setVisible(false)
-        else
-            local uiPanel_player2 = ccui.Helper:seekWidgetByName(self.root,"Panel_player2")
-            uiPanel_player2:setVisible(false)
-        end 
-    end
-    local viewID = GameCommon:getViewIDByChairID(wChairID) 
-    for wChairID = 0, 3 do
-        if GameCommon.player[wChairID] ~= nil then
-            local viewID = GameCommon:getViewIDByChairID(wChairID)
-            local uiPanel_player = ccui.Helper:seekWidgetByName(self.root,string.format("Panel_player%d",viewID))
-            local uiPanel_playerInfo = ccui.Helper:seekWidgetByName(uiPanel_player,"Panel_playerInfo")
-            uiPanel_playerInfo:setVisible(true)
-            local uiImage_avatar = ccui.Helper:seekWidgetByName(uiPanel_player,"Image_avatar")
-            Common:requestUserAvatar(GameCommon.player[wChairID].dwUserID,GameCommon.player[wChairID].szPto,uiImage_avatar,"img")
-            local uiText_name = ccui.Helper:seekWidgetByName(uiPanel_player,"Text_name")
-            uiText_name:setString(GameCommon.player[wChairID].szNickName)
-            local uiText_ID = ccui.Helper:seekWidgetByName(uiPanel_player,"Text_ID")
-            uiText_ID:setVisible(false)
-            if GameCommon.player[wChairID].dwOhterID ~= nil and GameCommon.player[wChairID].dwOhterID ~= 0 then
-                uiText_ID:setString(string.format("%d",GameCommon.player[wChairID].dwOhterID))
-            else
-                uiText_ID:setString(string.format("%d",GameCommon.player[wChairID].dwUserID))
-            end
-            local uiImage_gender = ccui.Helper:seekWidgetByName(uiPanel_player,"Image_gender")
-            if GameCommon.player[wChairID].cbSex == 0 then
-                uiImage_gender:loadTexture("user/user_g.png")
-            end
-            for wTargetChairID = 0, GameCommon.gameConfig.bPlayerCount-1 do
-                local targetViewID = GameCommon:getViewIDByChairID(wTargetChairID)
-                if GameCommon.gameConfig.bPlayerCount == 3 and wTargetChairID == 3 then
-                    viewID = 4
-                end
-                if wTargetChairID ~= wChairID then
-                    local uiText_location = ccui.Helper:seekWidgetByName(self.root,string.format("Text_%dto%d",viewID,targetViewID))
-                    if viewID > targetViewID then
-                        uiText_location = ccui.Helper:seekWidgetByName(self.root,string.format("Text_%dto%d",targetViewID,viewID))
-                    end
-                    if GameCommon.gameConfig.bPlayerCount == 2 then                
-                        if StaticData.Games[wKindID].type == 1 then
-                            uiText_location = ccui.Helper:seekWidgetByName(self.root,string.format("Text_%dto%d",1,2))
-                        else
-                            uiText_location = ccui.Helper:seekWidgetByName(self.root,string.format("Text_%dto%d",1,3))
-                        end 
-                    end 
-                    if uiText_location ~= nil then
-                        local distance = uiText_location:getString()
-                        if GameCommon.gameConfig.bPlayerCount == 3 and (wChairID == 3 or wTargetChairID == 3) then
-                            distance = ""
-                        elseif GameCommon.player[wChairID] == nil or GameCommon.player[wTargetChairID] == nil then
-                            distance = "等待加入..."
-                        elseif GameCommon.tableConfig.nTableType == TableType_GoldRoom or GameCommon.tableConfig.nTableType == TableType_SportsRoom then
-                            if distance == "500m" then
-                                distance = math.random(1000,300000)
-                            end
-                        elseif GameCommon.player[wChairID].location.x < 0.1 then
-                            distance = string.format("%s未开启定位",GameCommon.player[wChairID].szNickName)
-                        elseif GameCommon.player[wTargetChairID].location.x < 0.1 then
-                            distance = string.format("%s未开启定位",GameCommon.player[wTargetChairID].szNickName)
-                        else
-                            distance = GameCommon:GetDistance(GameCommon.player[wChairID].location,GameCommon.player[wTargetChairID].location) 
-                        end                     
-                        if type(distance) == "string" then
-
-                        elseif distance > 1000 then
-                            distance = string.format("%dkm",distance/1000)
-                        else
-                            distance = string.format("%dm",distance)
-                        end
-                        uiText_location:setString(distance)
-                    end
-                end
-            end
-        end
-    end
+    if GameCommon.gameConfig.bPlayerCount == nil then 
+        require("common.MsgBoxLayer"):create(0,nil,"房间配置获取失败!!!")    
+        self:removeFromParent()
+        return 
+    end 
     require("common.SceneMgr"):switchOperation(self)
+    self:init()
+    self:refreshUI()
+end
+
+function PositionLayer:init( ... )
+    self.Image_distance2 = ccui.Helper:seekWidgetByName(self.root,"Image_distance2")
+    self.Image_distance3 = ccui.Helper:seekWidgetByName(self.root,'Image_distance3')
+    self.Image_distance4 = ccui.Helper:seekWidgetByName(self.root,'Image_distance4')
+end
+
+function PositionLayer:refreshUI()
+    self.Image_distance2:setVisible(false)
+    self.Image_distance3:setVisible(false)
+    self.Image_distance4:setVisible(false)
+    local playerNum = GameCommon.gameConfig.bPlayerCount
+    local rootNode = self['Image_distance' .. playerNum]
+    rootNode:setVisible(true)
+    self:showPlayerPosition(rootNode, playerNum)
+end
+
+
+--更新距离
+function PositionLayer:updateLocationDis( rootNode, playerNum)
+    
+    for wChairID = 0, playerNum - 1 do    
+        local viewID = GameCommon:getViewIDByChairID(wChairID,true)
+        local uiPanel_players = ccui.Helper:seekWidgetByName(rootNode,string.format("Panel_players%d",viewID))
+        print('============',wChairID,viewID)
+        if GameCommon.player[wChairID] then
+            uiPanel_players:setVisible(true)
+            local uiImage_avatar = ccui.Helper:seekWidgetByName(uiPanel_players,"Image_avatar")
+            Common:requestUserAvatar(GameCommon.player[wChairID].dwUserID,GameCommon.player[wChairID].szPto,uiImage_avatar,"img")
+            local uiText_name = ccui.Helper:seekWidgetByName(uiPanel_players,"Text_name")
+            uiText_name:setString(GameCommon.player[wChairID].szNickName)
+
+            for wTargetChairID=0,playerNum-1 do
+                local targetViewID = GameCommon:getViewIDByChairID(wTargetChairID,true)
+                local uiText_location = ccui.Helper:seekWidgetByName(rootNode,string.format("Text_%dto%d",viewID,targetViewID))
+                if uiText_location and  wTargetChairID ~= wChairID then
+                    local distance = ''
+                    if GameCommon.player[wChairID] == nil or GameCommon.player[wTargetChairID] == nil then
+                        distance = "等待加入..."
+                    elseif GameCommon.tableConfig.nTableType == TableType_GoldRoom or GameCommon.tableConfig.nTableType == TableType_SportsRoom then
+                        distance = math.random(1000,300000)
+                    elseif GameCommon.player[wChairID].location.x < 0.1 then
+                        distance = string.format("%s\n未开启定位",GameCommon.player[wChairID].szNickName)
+                    elseif GameCommon.player[wTargetChairID].location.x < 0.1 then
+                        distance = string.format("%s\n未开启定位",GameCommon.player[wTargetChairID].szNickName)
+                    else
+                        distance = GameCommon:GetDistance(GameCommon.player[wChairID].location,GameCommon.player[wTargetChairID].location) 
+                    end                     
+                    if type(distance) == "string" then
+
+                    elseif distance > 1000 then
+                        distance = string.format("%dkm",distance/1000)
+                    else
+                        distance = string.format("%dm",distance)
+                    end
+                    uiText_location:setString(distance)
+                end
+            end
+        else
+            uiPanel_players:setVisible(false)
+            for wTargetChairID=0,playerNum-1 do
+                local targetViewID = GameCommon:getViewIDByChairID(wTargetChairID,true)
+                if wTargetChairID ~= wChairID then
+                    local uiText_location = ccui.Helper:seekWidgetByName(rootNode,string.format("Text_%dto%d",viewID,targetViewID))
+                    if uiText_location then
+                        uiText_location:setString("")
+                    end
+                end
+            end
+
+        end
+
+    end
+end
+
+
+function PositionLayer:showPlayerPosition(rootNode, playerNum)
+    for i = 1, playerNum do
+        local uiPanel_players = ccui.Helper:seekWidgetByName(rootNode,string.format("Panel_players%d",i))
+        local uiImage_avatar = ccui.Helper:seekWidgetByName(uiPanel_players,"Image_avatar")
+        uiImage_avatar:loadTexture("common/hall_avatar.png")
+        local uiText_name = ccui.Helper:seekWidgetByName(uiPanel_players,"Text_name")
+        uiText_name:setString("")
+    end
+
+    self:updateLocationDis(rootNode,playerNum)
+end
+
+function PositionLayer:RET_GAMES_USER_POSITION(event)
+    print('-->>>>update')
+    local playerNum = GameCommon.gameConfig.bPlayerCount
+    local rootNode = self['Image_distance' .. playerNum]
+    rootNode:setVisible(true)
+    self:showPlayerPosition(rootNode, playerNum)
 end
 
 return PositionLayer

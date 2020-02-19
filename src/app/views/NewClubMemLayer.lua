@@ -316,10 +316,26 @@ function NewClubMemLayer:RET_SETTINGS_CLUB_MEMBER(event)
             require("common.MsgBoxLayer"):create(0,nil,"普通成员才可以设置为合伙人!")
         elseif data.lRet == 5 then
             require("common.MsgBoxLayer"):create(0,nil,"您的权限不足!")
+        elseif data.lRet == 6 then
+            require("common.MsgBoxLayer"):create(0,nil,"权限不足,只有合伙人才能设置!")
+        elseif data.lRet == 7 then
+            require("common.MsgBoxLayer"):create(0,nil,"合伙人疲劳值不足!")
+        elseif data.lRet == 8 then
+            require("common.MsgBoxLayer"):create(0,nil,"目标玩家疲劳值不足!")
+        elseif data.lRet == 9 then
+            require("common.MsgBoxLayer"):create(0,nil,"合伙人的疲劳值不够扣!")
+        elseif data.lRet == 10 then
+            require("common.MsgBoxLayer"):create(0,nil,"参数错误!")
+        elseif data.lRet == 11 then
+            require("common.MsgBoxLayer"):create(0,nil,"比例超过最大限!")
+        elseif data.lRet == 12 then
+            require("common.MsgBoxLayer"):create(0,nil,"超层级上限不能设置合伙人!")
+        elseif data.lRet == 13 then
+            require("common.MsgBoxLayer"):create(0,nil,"防沉迷不等于0不得设置!")
         elseif data.lRet == 100 then
-            require("common.MsgBoxLayer"):create(0,nil,"对局中不能减少疲劳值")
+            require("common.MsgBoxLayer"):create(0,nil,"对局中不能减少疲劳值!")
         else
-            require("common.MsgBoxLayer"):create(0,nil,"设置错误!")
+            require("common.MsgBoxLayer"):create(0,nil,"设置错误! code=" .. data.lRet)
         end
         return
     end

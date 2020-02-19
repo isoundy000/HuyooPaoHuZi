@@ -108,21 +108,27 @@ function PleaseOnlinePlayerLayer:addOnlineMember(data)
 	local item = self.Image_item:clone()
     self.ScrollView_1:addChild(item)
     item:setName('online_' .. data.dwUserID)
-
-    local length = #self.ScrollView_1:getChildren()
-    local row = length % 2
-    if row == 0 then
-        row = 2
-    end
-    local col = math.ceil(length / 2)
-    local x = 211 + (row - 1) * 418
-    local y = 340 - (col - 1) * 135
-    item:setPosition(x, y)
-
-    local inerSize = self.ScrollView_1:getContentSize()
-    local scrollH = col * (125 + 10)
-    self.ScrollView_1:setInnerContainerSize(cc.size(inerSize.width, scrollH))
     self:setCloneItem(item, data)
+    local items = self.ScrollView_1:getChildren()
+    local length = #items
+    local inerSize = self.ScrollView_1:getContentSize()
+    local colMax = math.ceil(length / 2)
+    local scrollH = colMax * (125 + 10)
+    local tempY = scrollH - inerSize.height
+    if tempY < 0 then
+        tempY = 0
+    end
+    self.ScrollView_1:setInnerContainerSize(cc.size(inerSize.width, scrollH))
+    for i,v in ipairs(items) do
+        local row = i % 2
+        if row == 0 then
+            row = 2
+        end
+        local col = math.ceil(i / 2)
+        local x = 211 + (row - 1) * 418
+        local y = 340 - (col - 1) * 135 + tempY
+        v:setPosition(x, y)
+    end
 end
 
 function PleaseOnlinePlayerLayer:setCloneItem(item, data)

@@ -779,8 +779,8 @@ function TableLayer:initUI()
     
     local uiButton_position = ccui.Helper:seekWidgetByName(self.root,"Button_position")   -- 定位
     Common:addTouchEventListener(uiButton_position,function() 
-        --require("common.PositionLayer"):create(GameCommon.tableConfig.wKindID)
-        require("game.yongzhou.PositionLayer"):create(GameCommon.tableConfig.wKindID)
+        require("common.PositionLayer"):create(GameCommon.tableConfig.wKindID)
+        --require("game.yongzhou.PositionLayer"):create(GameCommon.tableConfig.wKindID)
     end)
 
     local uiPanel_playerInfoBg = ccui.Helper:seekWidgetByName(self.root,"Panel_playerInfoBg")

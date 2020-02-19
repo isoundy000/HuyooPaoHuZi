@@ -121,13 +121,18 @@ function NewClubNoticeLayer:onAddMem()
         local numName = string.format("Text_number%d", i)
         local Text_number = ccui.Helper:seekWidgetByName(self.Image_inputFrame, numName)
         if Text_number:getString() == "" then
-            require("common.MsgBoxLayer"):create(0,nil,"输入玩家ID不正确!")
-            return
+            break
         else
             id = id .. Text_number:getString()
         end
     end
-    UserData.Guild:addClubMember(self.clubData.dwClubID, tonumber(id), UserData.User.userID)
+
+    local playerId = tonumber(id)
+    if not playerId then
+        require("common.MsgBoxLayer"):create(0,nil,"输入玩家ID不正确!")
+        return
+    end
+    UserData.Guild:addClubMember(self.clubData.dwClubID, playerId, UserData.User.userID)
     self.curInputMemID = tonumber(id)
 end
 
@@ -433,7 +438,7 @@ function NewClubNoticeLayer:RET_ADD_CLUB_MEMBER(event)
         elseif data.lRet == 2 then
             require("common.MsgBoxLayer"):create(0,self,"该成员已在亲友圈内，请勿重复操作!")
         elseif data.lRet == 3 then
-            require("common.MsgBoxLayer"):create(0,self,"玩家ID不合法!")
+            require("common.MsgBoxLayer"):create(0,self,"玩家不存在!")
         elseif data.lRet == 4 then
             require("common.MsgBoxLayer"):create(0,self,"您没有权限导入！")
         elseif data.lRet == 5 then

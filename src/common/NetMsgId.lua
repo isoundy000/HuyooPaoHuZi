@@ -229,12 +229,12 @@ local NetMsgId = {
     RET_GET_CLUB_LIST3                  = 24005,                           --返回亲友圈列表
     REQ_REFRESH_CLUB3                   = 2402,                            --请求刷新亲友圈
     RET_REFRESH_CLUB3                   = 24002,                           --返回刷新亲友圈
-    REQ_SETTINGS_CLUB_PLAY              = 2335,                            --请求设置亲友圈玩法
-    RET_SETTINGS_CLUB_PLAY              = 23035,                           --返回设置亲友圈玩法
-    RET_SETTINGS_CLUB_PLAY_FINISH       = 23036,
-    REQ_REFRESH_CLUB_PLAY3              = 2337,                            --请求刷新俱乐部玩法
-    RET_REFRESH_CLUB_PLAY               = 23037,                           --返回刷新俱乐部玩法
-    RET_REFRESH_CLUB_PLAY_FINISH        = 23038,
+    REQ_SETTINGS_CLUB_PLAY              = 2338,                            --请求设置亲友圈玩法
+    RET_SETTINGS_CLUB_PLAY              = 23038,                           --返回设置亲友圈玩法
+    RET_SETTINGS_CLUB_PLAY_FINISH       = 23039,
+    REQ_REFRESH_CLUB_PLAY3              = 2340,                            --请求刷新俱乐部玩法
+    RET_REFRESH_CLUB_PLAY               = 23040,                           --返回刷新俱乐部玩法
+    RET_REFRESH_CLUB_PLAY_FINISH        = 23041,
 
     REQ_SETTINGS_CONFIG                 = 2222,                             --请求合伙人配置
     RET_SETTINGS_CONFIG                 = 22022,                            --返回合伙人配置
@@ -311,8 +311,8 @@ local NetMsgId = {
 
     -----------------------------------------
     --合伙人
-    REQ_SETTINGS_CLUB_MEMBER            = 2302,                            --请求修改亲友圈成员
-    RET_SETTINGS_CLUB_MEMBER            = 23002,                           --返回修改亲友圈成员
+    REQ_SETTINGS_CLUB_MEMBER            = 2342,                            --请求修改亲友圈成员
+    RET_SETTINGS_CLUB_MEMBER            = 23042,                           --返回修改亲友圈成员
     REQ_SETTINGS_CLUB_PARTNER           = 1665,                            --请求修改亲友圈合伙人
     RET_SETTINGS_CLUB_PARTNER           = 16065,                           --返回修改亲友圈合伙人
     REQ_GET_CLUB_PARTNER                = 2311,                            --请求亲友圈合伙人
@@ -343,6 +343,8 @@ local NetMsgId = {
     REQ_CLUB_GROUP_INVITE_REPLY         = 2317,                            --合群回复
     RET_CLUB_GROUP_INVITE_REPLY         = 23017,                           --合群回复
 
+    REQ_MATCH_CLUB_TABLE                = 2508,                             --匹配俱乐部桌子
+    RET_MATCH_CLUB_TABLE                = 25008,                            --返回匹配俱乐部桌子
 
 
     --竞技
@@ -729,6 +731,7 @@ local NetMsgId = {
         --92 安化麻将特有消息
         SUB_S_KING_CARD                    = 155,								--王牌数据
         SUB_S_STARTHU_FOURKING             = 156,								--四王起手胡  
+
 }
 
 return NetMsgId

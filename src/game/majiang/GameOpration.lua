@@ -126,7 +126,7 @@ function GameOpration:showOpration(pBuffer)
             --     item:addChild(img)
             --     img:setPosition(img:getParent():getContentSize().width/2,img:getParent():getContentSize().height)
             -- else
-                local img = ccui.ImageView:create("yongzhou/ui/end_play_wangdiao.png")
+                local img = ccui.ImageView:create("game/ui/end_play_wangdiao.png")
                 item:addChild(img)
                 img:setPosition(img:getParent():getContentSize().width/2,img:getParent():getContentSize().height)
             -- end
@@ -137,7 +137,7 @@ function GameOpration:showOpration(pBuffer)
             --     item:addChild(img)
             --     img:setPosition(img:getParent():getContentSize().width/2,img:getParent():getContentSize().height)
             -- else
-                local img = ccui.ImageView:create("yongzhou/ui/end_play_wangchuang.png")
+                local img = ccui.ImageView:create("game/ui/end_play_wangchuang.png")
                 item:addChild(img)
                 img:setPosition(img:getParent():getContentSize().width/2,img:getParent():getContentSize().height)
             -- end
